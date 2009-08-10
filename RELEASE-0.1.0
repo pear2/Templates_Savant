@@ -1,0 +1,4 @@
+Port Savant3 to pear2.
+
+* Always throw exceptions.
+* Never load files internally.
