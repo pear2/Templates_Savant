@@ -993,7 +993,7 @@ class Main
         // find the template source.
         $file = $this->findFile('template', $tpl);
         if (! $file) {
-            throw new Exception('Template error. The template, '.$tpl.', was not found.');
+            throw new TemplateException('Template error. The template, '.$tpl.', was not found.');
         }
         
         // are we compiling source into a script?
