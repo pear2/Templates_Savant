@@ -792,6 +792,14 @@ class Main
                     $this->$key = $val;
                 }
             }
+            // if the object supports ArrayAccess
+            if (in_array('ArrayAccess', class_implements($arg0))) {
+                foreach ($arg0->toArray() as $key => $val) {
+                    if ($key != '__config') {
+                        $this->$key = $val;
+                    }
+                }
+            }
             return true;
         }
         
