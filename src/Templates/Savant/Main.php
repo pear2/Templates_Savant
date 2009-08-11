@@ -793,7 +793,7 @@ class Main
                 }
             }
             // if the object supports ArrayAccess
-            if (in_array('ArrayAccess', class_implements($arg0))) {
+            if ($arg0 instanceof ArrayAccess) {
                 foreach ($arg0->toArray() as $key => $val) {
                     if ($key != '__config') {
                         $this->$key = $val;
