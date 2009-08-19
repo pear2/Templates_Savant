@@ -71,11 +71,11 @@ class OutputController
     static function display($mixed, $return = false)
     {
         if (is_array($mixed)) {
-            return self::displayArray($mixed, $return);
+            return static::displayArray($mixed, $return);
         }
         
         if (is_object($mixed)) {
-            return self::displayObject($mixed, $return);
+            return static::displayObject($mixed, $return);
         }
         
         if ($return) {
@@ -95,7 +95,7 @@ class OutputController
      */
     static public function setCacheInterface(CacheInterface $cache)
     {
-        self::$cache = $cache;
+        static::$cache = $cache;
     }
     
     /**
@@ -111,9 +111,9 @@ class OutputController
         $output = '';
         foreach ($mixed as $m) {
             if ($return) {
-                $output .= self::display($m, true);
+                $output .= static::display($m, true);
             } else {
-                self::display($m, true);
+                static::display($m, true);
             }
         }
         
@@ -156,14 +156,14 @@ class OutputController
                 $object->run();
                 
                 if ($return) {
-                    $data = self::sendObjectOutput($object, $return);
+                    $data = static::sendObjectOutput($object, $return);
                 } else {
-                    self::sendObjectOutput($object, $return);
+                    static::sendObjectOutput($object, $return);
                     $data = ob_get_contents();
                 }
                 
                 if ($key !== false) {
-                    self::$cache->save($data);
+                    static::$cache->save($data);
                 }
                 ob_end_clean();
             }
@@ -180,7 +180,7 @@ class OutputController
             return true;
         }
         
-        return self::sendObjectOutput($object, $return);
+        return static::sendObjectOutput($object, $return);
 
     }
     
@@ -199,8 +199,8 @@ class OutputController
     static protected function sendObjectOutput(&$object, $return = false)
     {
         $savant = new \pear2\Templates\Savant\Main();
-        if (!empty(self::$template_path)) {
-            $savant->addPath('template', self::$template_path);
+        if (!empty(static::$template_path)) {
+            $savant->addPath('template', static::$template_path);
         }
         $savant->assign($object);
         if ($object instanceof Exception) {
@@ -210,7 +210,7 @@ class OutputController
             $savant->message = $object->getMessage();
             $savant->trace   = $object->getTrace();
         }
-        $templatefile = self::getTemplateFilename(get_class($object));
+        $templatefile = static::getTemplateFilename(get_class($object));
         if ($return) {
             return $savant->fetch($templatefile);
         }
@@ -233,12 +233,12 @@ class OutputController
      */
     static function getTemplateFilename($class)
     {
-        if (isset(self::$output_template[$class])) {
-            $class = self::$output_template[$class];
+        if (isset(static::$output_template[$class])) {
+            $class = static::$output_template[$class];
         }
         
-        $class = str_replace(array(self::$classname_replacement,
-                                   self::$directory_separator,
+        $class = str_replace(array(static::$classname_replacement,
+                                   static::$directory_separator,
                                    '\\'),
                              array('',
                                    DIRECTORY_SEPARATOR,
@@ -262,9 +262,9 @@ class OutputController
     static public function setOutputTemplate($class_name, $template_name)
     {
         if (isset($template_name)) {
-            self::$output_template[$class_name] = $template_name;
+            static::$output_template[$class_name] = $template_name;
         }
-        return self::getTemplateFilename($class_name);
+        return static::getTemplateFilename($class_name);
     }
     
     /**
@@ -276,7 +276,7 @@ class OutputController
      */
     static public function setDirectorySeparator($separator)
     {
-        self::$directory_separator = $separator;
+        static::$directory_separator = $separator;
     }
     
     /**
@@ -288,7 +288,7 @@ class OutputController
      */
     static public function setClassNameReplacement($replacement)
     {
-        self::$classname_replacement = $replacement;
+        static::$classname_replacement = $replacement;
     }
     
     /**
@@ -300,7 +300,7 @@ class OutputController
      */
     static public function setTemplatePath($path)
     {
-        self::$template_path = $path;
+        static::$template_path = $path;
     }
 }
 
