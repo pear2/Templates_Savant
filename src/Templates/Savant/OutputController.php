@@ -203,12 +203,13 @@ class OutputController
             $savant->addPath('template', static::$template_path);
         }
         $savant->assign($object);
-        if ($object instanceof Exception) {
-            $savant->code    = $object->getCode();
-            $savant->line    = $object->getLine();
-            $savant->file    = $object->getFile();
-            $savant->message = $object->getMessage();
-            $savant->trace   = $object->getTrace();
+        if ($object instanceof \Exception) {
+            $savant->code      = $object->getCode();
+            $savant->line      = $object->getLine();
+            $savant->file      = $object->getFile();
+            $savant->message   = $object->getMessage();
+            $savant->trace     = $object->getTrace();
+            $savant->exception = $object;
         }
         $templatefile = static::getTemplateFilename(get_class($object));
         if ($return) {
