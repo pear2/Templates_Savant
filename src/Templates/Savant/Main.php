@@ -232,7 +232,7 @@ class Main
             
             // not already instantiated, so load it up.
             // set up the class name.
-            $class = "pear2\Templates\Savant\Plugin\$name";
+            $class = "pear2\\Templates\\Savant\\Plugin\\$name";
             
             // get the default configuration for the plugin.
             $plugin_conf =& $this->__config['plugin_conf'];
