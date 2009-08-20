@@ -111,9 +111,9 @@ class OutputController
         $output = '';
         foreach ($mixed as $m) {
             if ($return) {
-                $output .= static::display($m, true);
+                $output .= static::display($m, $return);
             } else {
-                static::display($m, true);
+                static::display($m, $return);
             }
         }
         
