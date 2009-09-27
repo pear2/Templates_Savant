@@ -37,7 +37,7 @@ class Main
     */
     
     protected $__config = array(
-        'template_path' => array(),
+        'template_path' => array(''),
         'resource_path' => array(),
         'compiler'      => null,
         'filters'       => array(),
@@ -46,9 +46,38 @@ class Main
         'plugin_conf'   => array(),
         'extract'       => false,
         'fetch'         => null,
-        'escape'        => array('htmlspecialchars'),
+        'escape'        => array(),
     );
     
+    protected $output_controller;
+    
+    /**
+     * Default template mapping can be temporarily overridden by 
+     * assigning a direct template name.
+     * 
+     * OutputController::$output_template['My_Class'] = 'My/Class_rss.tpl.php';
+     * 
+     * @var array
+     */
+    static $output_template       = array();
+    
+    /**
+     * What character to use as a directory separator when mapping class names
+     * to templates.
+     * 
+     * @var string
+     */
+    static $directory_separator   = '_';
+    
+    /**
+     * Strip something out of class names before mapping them to templates.
+     * 
+     * This can be useful if your class names are very long, and you don't
+     * want empty subdirectories within your templates directory.
+     * 
+     * @var string
+     */
+    static $classname_replacement = '';
     
     // -----------------------------------------------------------------
     //
@@ -100,16 +129,6 @@ class Main
             $this->setExtract($config['extract']);
         }
         
-        // set the exceptions flag
-        if (isset($config['exceptions'])) {
-            $this->setExceptions($config['exceptions']);
-        }
-        
-        // set the template to use for output
-        if (isset($config['template'])) {
-            $this->setTemplate($config['template']);
-        }
-        
         // set the output escaping callbacks
         if (isset($config['escape'])) {
             $this->setEscape($config['escape']);
@@ -126,6 +145,25 @@ class Main
         if (isset($config['filters'])) {
             $this->addFilters($config['filters']);
         }
+        
+        $savant =& $this;
+        $this->output_controller = function($view, $template = null) use ($savant) {
+                ob_start();
+                if ($template == NULL) {
+                    if ($view instanceof ObjectProxy) {
+                        $class = $view->__getClass();
+                    } else {
+                        $class = get_class($view);
+                    }
+                    $template = $savant->getTemplateFilename($class);
+                }
+                $file = $savant->findFile('template', $template);
+                if (!$file) {
+                    echo 'Could not find template!';
+                }
+                include $file;
+                return $savant->applyFilters(ob_get_clean());
+            };
     }
     
     
@@ -172,24 +210,6 @@ class Main
             return call_user_func_array(array($plugin, $func), $args);
             break;
         }
-    }
-    
-    
-    /**
-    * 
-    * Magic method to echo this object as template output.
-    * 
-    * Note that if there is an error, an exception will be thrown.
-    * 
-    * @access public
-    *  
-    * @return string The template output.
-    * 
-    */
-    
-    public function __toString()
-    {
-        return $this->getOutput();
     }
     
     
@@ -691,7 +711,7 @@ class Main
     *
     */
     
-    protected function findFile($type, $file)
+    public function findFile($type, $file)
     {
         // get the set of paths
         $set = $this->__config[$type . '_path'];
@@ -730,242 +750,133 @@ class Main
     
     // -----------------------------------------------------------------
     //
-    // Variable and reference assignment
-    //
-    // -----------------------------------------------------------------
-    
-    
-    /**
-    * 
-    * Sets variables for the template (by copy).
-    * 
-    * This method is overloaded; you can assign all the properties of
-    * an object, an associative array, or a single value by name.
-    * 
-    * You are not allowed to assign any variable named '__config' as
-    * it would conflict with internal configuration tracking.
-    * 
-    * In the following examples, the template will have two variables
-    * assigned to it; the variables will be known inside the template as
-    * "$this->var1" and "$this->var2".
-    * 
-    * <code>
-    * $Savant3 = new Savant3();
-    * 
-    * // assign by object
-    * $obj = new stdClass;
-    * $obj->var1 = 'something';
-    * $obj->var2 = 'else';
-    * $Savant3->assign($obj);
-    * 
-    * // assign by associative array
-    * $ary = array('var1' => 'something', 'var2' => 'else');
-    * $Savant3->assign($ary);
-    * 
-    * // assign by name and value
-    * $Savant3->assign('var1', 'something');
-    * $Savant3->assign('var2', 'else');
-    * 
-    * // assign directly
-    * $Savant3->var1 = 'something';
-    * $Savant3->var2 = 'else';
-    * </code>
-    * 
-    * @access public
-    * 
-    * @return bool True on success, false on failure.
-    * 
-    */
-    
-    public function assign()
-    {
-        // get the arguments; there may be 1 or 2.
-        $arg0 = @func_get_arg(0);
-        $arg1 = @func_get_arg(1);
-        
-        // assign from object
-        if (is_object($arg0)) {
-            // assign public properties
-            foreach (get_object_vars($arg0) as $key => $val) {
-                // can't assign to __config
-                if ($key != '__config') {
-                    $this->$key = $val;
-                }
-            }
-            // if the object supports ArrayAccess
-            if ($arg0 instanceof ArrayAccess) {
-                foreach ($arg0->toArray() as $key => $val) {
-                    if ($key != '__config') {
-                        $this->$key = $val;
-                    }
-                }
-            }
-            return true;
-        }
-        
-        // assign from associative array
-        if (is_array($arg0)) {
-            foreach ($arg0 as $key => $val) {
-                // can't assign to __config
-                if ($key != '__config') {
-                    $this->$key = $val;
-                }
-            }
-            return true;
-        }
-        
-        // assign by name and value (can't assign to __config).
-        if (is_string($arg0) && func_num_args() > 1 && $arg0 != '__config') {
-            $this->$arg0 = $arg1;
-            return true;
-        }
-        
-        // $arg0 was not object, array, or string.
-        return false;
-    }
-    
-    
-    /**
-    * 
-    * Sets variables for the template (by reference).
-    * 
-    * You are not allowed to assign any variable named '__config' as
-    * it would conflict with internal configuration tracking.
-    * 
-    * <code>
-    * $Savant3 = new Savant3();
-    * 
-    * // assign by name and value
-    * $Savant3->assignRef('var1', $ref);
-    * 
-    * // assign directly
-    * $Savant3->ref =& $var1;
-    * </code>
-    * 
-    * @access public
-    * 
-    * @return bool True on success, false on failure.
-    * 
-    */
-    
-    public function assignRef($key, &$val)
-    {
-        // assign by name and reference (can't assign to __config).
-        if ($key != '__config') {
-            $this->$key =& $val;
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    
-    // -----------------------------------------------------------------
-    //
     // Template processing
     //
     // -----------------------------------------------------------------
     
     
-    /**
-    * 
-    * Displays a template directly (equivalent to <code>echo $tpl</code>).
-    * 
-    * @access public
-    * 
-    * @param string $tpl The template source to compile and display.
-    * 
-    * @return void
-    * 
-    */
-    
-    public function display($tpl = null)
+    function display($mixed, $template = null, $return = false)
     {
-        echo $this->getOutput($tpl);
-    }
-    
-    /**
-     * Returns output, including error_text if an error occurs.
-     * 
-     * @param $tpl The template to process; if null, uses the
-     * default template set with setTemplate().
-     * 
-     * @return string The template output.
-     */
-    public function getOutput($tpl = null)
-    {
-        $output = $this->fetch($tpl);
-        return $output;
-    }
-    
-    
-    /**
-    * 
-    * Compiles, executes, and filters a template source.
-    * 
-    * @access public
-    * 
-    * @param string $tpl The template to process; if null, uses the
-    * default template set with setTemplate().
-    * 
-    * @return mixed The template output string.
-    * 
-    */
-    
-    public function fetch($tpl = null)
-    {
-        // make sure we have a template source to work with
-        if (is_null($tpl)) {
-            $tpl = $this->__config['template'];
+        if (is_array($mixed)) {
+            return $this->displayArray($mixed, $template, $return);
         }
         
-        // get a path to the compiled template script
-        $result = $this->template($tpl);
+        if (is_object($mixed)) {
+            return $this->displayObject($mixed, $template, $return);
+        }
         
-        // did we get a path?
-        if (!$result) {
-        
-            // no. return the error result.
-            return $result;
-            
-        } else {
-        
-            // yes.  execute the template script.  move the script-path
-            // out of the local scope, then clean up the local scope to
-            // avoid variable name conflicts.
-            $this->__config['fetch'] = $result;
-            unset($result);
-            unset($tpl);
-            
-            // are we doing extraction?
-            if ($this->__config['extract']) {
-                // pull variables into the local scope.
-                extract(get_object_vars($this), EXTR_REFS);
+        return $this->displayString($mixed, $template, $return);
+    }
+    
+    protected function displayString($string, $template = null, $return = false)
+    {
+        if ($template) {
+            if ($return) {
+                return $this->fetch($string, $template);
             }
-            
-            // buffer output so we can return it instead of displaying.
-            ob_start();
-            
-            // are we using filters?
-            if ($this->__config['filters']) {
-                // use a second buffer to apply filters. we used to set
-                // the ob_start() filter callback, but that would
-                // silence errors in the filters. Hendy Irawan provided
-                // the next three lines as a "verbose" fix.
-                ob_start();
-                include $this->__config['fetch'];
-                echo $this->applyFilters(ob_get_clean());
+            echo $this->fetch($string, $template);
+            return true;
+        }
+        
+        if ($return) {
+            return $this->applyFilters($string);
+        }
+        
+        echo $this->applyFilters($string);
+        return true;
+    }
+    
+    protected function displayArray($mixed, $template = null, $return = false)
+    {
+        $output = '';
+        foreach ($mixed as $m) {
+            if ($return) {
+                $output .= $this->display($m, $template, $return);
             } else {
-                // no filters being used.
-                include $this->__config['fetch'];
+                $this->display($m, $template, $return);
             }
-            
-            // reset the fetch script value, get the buffer, and return.
-            $this->__config['fetch'] = null;
-            return ob_get_clean();
         }
+        
+        if ($return) {
+            return $output;
+        }
+        
+        return true;
     }
     
+    protected function displayObject($object, $template = null, $return = false)
+    {
+        if ($object instanceof Cacheable) {
+            $key = $object->getCacheKey();
+            if ($key !== false && $data = $this->cache->get($key)) {
+                // Tell the object we have cached data and will output that.
+                $object->preRun(true);
+            } else {
+                // Content should be cached, but none could be found.
+                $object->preRun(false);
+                $object->run();
+                
+                $data = $this->fetch($object);
+                
+                if ($key !== false) {
+                    $this->cache->save($data, $key);
+                }
+            }
+            if ($return) {
+                return $data;
+            }
+            
+            echo $data;
+            return true;
+        }
+        if ($return) {
+            return $this->fetch($object, $template);
+        }
+        echo $this->fetch($object, $template);
+        return true;
+    }
+    
+    protected function fetch($mixed, $template = null)
+    {
+        $outputcontroller = $this->output_controller;
+        if (is_object($mixed)
+            && count($this->__config['escape'])) {
+            $mixed = new ObjectProxy($mixed, $this);
+        }
+        return $outputcontroller($mixed, $template);
+    }
+    
+    /**
+     * This function maps a class name to a template filename.
+     * 
+     * My_Class => My/Class.tpl.php
+     * 
+     * @see OutputController::$classname_replacment
+     * @see OutputController::$directory_separator
+     * @see OutputController::$output_template
+     * 
+     * @param string $class The class to get template filename for.
+     * 
+     * @return string
+     */
+    function getTemplateFilename($class)
+    {
+        if (isset(static::$output_template[$class])) {
+            $class = static::$output_template[$class];
+        }
+        
+        $class = str_replace(array(static::$classname_replacement,
+                                   static::$directory_separator,
+                                   '\\'),
+                             array('',
+                                   DIRECTORY_SEPARATOR,
+                                   DIRECTORY_SEPARATOR),
+                             $class);
+        
+        $templatefile = $class . '.tpl.php';
+        
+        return $templatefile;
+    }
     
     /**
     *
@@ -993,11 +904,6 @@ class Main
     
     protected function template($tpl = null)
     {
-        // set to default template if none specified.
-        if (is_null($tpl)) {
-            $tpl = $this->__config['template'];
-        }
-        
         // find the template source.
         $file = $this->findFile('template', $tpl);
         if (! $file) {
@@ -1090,7 +996,7 @@ class Main
     * 
     */
     
-    protected function applyFilters($buffer)
+    public function applyFilters($buffer)
     {
         foreach ($this->__config['filters'] as $callback) {
         
@@ -1098,7 +1004,7 @@ class Main
             // and not already loaded, try to auto-load it.
             if (is_array($callback) &&
                 is_string($callback[0]) &&
-                substr($callback[0], 0, 15) == 'Savant3_Filter_' &&
+                substr($callback[0], 0, 15) == '\\pear2\\Templates\\Savant\\Filter\\' &&
                 ! class_exists($callback[0])) {
                 
                 // load the Savant3_Filter_*.php resource
