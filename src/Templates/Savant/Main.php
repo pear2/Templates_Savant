@@ -681,56 +681,39 @@ class Main
     // -----------------------------------------------------------------
     
     
-    function display($mixed, $template = null, $return = false)
+    function render($mixed, $template = null)
     {
         if (is_array($mixed)) {
-            return $this->displayArray($mixed, $template, $return);
+            return $this->renderArray($mixed, $template);
         }
         
         if (is_object($mixed)) {
-            return $this->displayObject($mixed, $template, $return);
+            return $this->renderObject($mixed, $template);
         }
         
-        return $this->displayString($mixed, $template, $return);
+        return $this->renderString($mixed, $template);
     }
     
-    protected function displayString($string, $template = null, $return = false)
+    protected function renderString($string, $template = null)
     {
         if ($template) {
-            if ($return) {
-                return $this->fetch($string, $template);
-            }
-            echo $this->fetch($string, $template);
-            return true;
+            return $this->fetch($string, $template);
         }
         
-        if ($return) {
-            return $this->applyFilters($string);
-        }
-        
-        echo $this->applyFilters($string);
-        return true;
+        return $this->applyFilters($string);
     }
     
-    protected function displayArray($mixed, $template = null, $return = false)
+    protected function renderArray($mixed, $template = null)
     {
         $output = '';
         foreach ($mixed as $m) {
-            if ($return) {
-                $output .= $this->display($m, $template, $return);
-            } else {
-                $this->display($m, $template, $return);
-            }
+            $output .= $this->render($m, $template);
         }
         
-        if ($return) {
-            return $output;
-        }
-        
-        return true;
+        return $output;
     }
     
-    protected function displayObject($object, $template = null, $return = false)
+    protected function renderObject($object, $template = null)
     {
         if ($object instanceof Cacheable) {
             $key = $object->getCacheKey();
@@ -748,18 +731,9 @@ class Main
                     $this->cache->save($data, $key);
                 }
             }
-            if ($return) {
-                return $data;
-            }
-            
-            echo $data;
-            return true;
+            return $data;
         }
-        if ($return) {
-            return $this->fetch($object, $template);
-        }
-        echo $this->fetch($object, $template);
-        return true;
+        return $this->fetch($object, $template);
     }
     
     protected function fetch($mixed, $template = null)
