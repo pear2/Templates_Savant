@@ -49,32 +49,11 @@ class Main
     protected $output_controller;
     
     /**
-     * Default template mapping can be temporarily overridden by 
-     * assigning a direct template name.
+     * How class names are translated to templates
      * 
-     * OutputController::$output_template['My_Class'] = 'My/Class_rss.tpl.php';
-     * 
-     * @var array
+     * @var MapperInterface
      */
-    static $output_template       = array();
-    
-    /**
-     * What character to use as a directory separator when mapping class names
-     * to templates.
-     * 
-     * @var string
-     */
-    static $directory_separator   = '_';
-    
-    /**
-     * Strip something out of class names before mapping them to templates.
-     * 
-     * This can be useful if your class names are very long, and you don't
-     * want empty subdirectories within your templates directory.
-     * 
-     * @var string
-     */
-    static $classname_replacement = '';
+    protected $class_to_template;
     
     // -----------------------------------------------------------------
     //
@@ -717,21 +696,15 @@ class Main
      */
     function getTemplateFilename($class)
     {
-        if (isset(static::$output_template[$class])) {
-            $class = static::$output_template[$class];
+        if (!isset($this->class_to_template)) {
+            $this->setClassToTemplateMapper(new ClassToTemplateMapper());
         }
-        
-        $class = str_replace(array(static::$classname_replacement,
-                                   static::$directory_separator,
-                                   '\\'),
-                             array('',
-                                   DIRECTORY_SEPARATOR,
-                                   DIRECTORY_SEPARATOR),
-                             $class);
-        
-        $templatefile = $class . '.tpl.php';
-        
-        return $templatefile;
+        return $this->class_to_template->map($class);
+    }
+    
+    function setClassToTemplateMapper(MapperInterface $mapper)
+    {
+        $this->class_to_template = $mapper;
     }
     
     /**
