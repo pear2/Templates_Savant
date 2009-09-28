@@ -44,8 +44,6 @@ class Main
         'plugins'       => array(),
         'template'      => null,
         'plugin_conf'   => array(),
-        'extract'       => false,
-        'fetch'         => null,
         'escape'        => array(),
     );
     
@@ -122,11 +120,6 @@ class Main
             // no directories set, use the
             // default directory only
             $this->setPath('resource', null);
-        }
-        
-        // set the extraction flag
-        if (isset($config['extract'])) {
-            $this->setExtract($config['extract']);
         }
         
         // set the output escaping callbacks
@@ -329,25 +322,6 @@ class Main
     public function setCompiler($compiler)
     {
         $this->__config['compiler'] = $compiler;
-    }
-    
-    
-    /**
-    * 
-    * Sets whether or not variables will be extracted.
-    * 
-    * @access public
-    * 
-    * @param bool $flag True to turn on variable extraction, false
-    * to turn it off.
-    * 
-    * @return void
-    * 
-    */
-    
-    public function setExtract($flag)
-    {
-        $this->__config['extract'] = (bool) $flag;
     }
     
     
