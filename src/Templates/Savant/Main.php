@@ -119,7 +119,6 @@ class Main
         
         $savant =& $this;
         $this->output_controller = function($view, $template = null) use ($savant) {
-                ob_start();
                 if ($template == NULL) {
                     if ($view instanceof ObjectProxy) {
                         $class = $view->__getClass();
@@ -132,6 +131,7 @@ class Main
                 if (!$file) {
                     echo 'Could not find template!';
                 }
+                ob_start();
                 include $file;
                 return $savant->applyFilters(ob_get_clean());
             };
@@ -828,23 +828,6 @@ class Main
     public function applyFilters($buffer)
     {
         foreach ($this->__config['filters'] as $callback) {
-        
-            // if the callback is a static Savant3_Filter method,
-            // and not already loaded, try to auto-load it.
-            if (is_array($callback) &&
-                is_string($callback[0]) &&
-                substr($callback[0], 0, 15) == '\\pear2\\Templates\\Savant\\Filter\\' &&
-                ! class_exists($callback[0])) {
-                
-                // load the Savant3_Filter_*.php resource
-                $file = $callback[0] . '.php';
-                $result = $this->findFile('resource', $file);
-                if ($result) {
-                    include_once $result;
-                }
-            }
-            
-            // can't pass a third $this param, it chokes the OB system.
             $buffer = call_user_func($callback, $buffer);
         }
         
