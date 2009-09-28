@@ -547,54 +547,6 @@ class Main
     }
     
     
-    /**
-    *
-    * Prints a value after escaping it for output.
-    * 
-    * You can override the predefined escaping callbacks by passing
-    * added parameters as replacement callbacks.
-    * 
-    * <code>
-    * // use predefined callbacks
-    * $this->eprint($value);
-    * 
-    * // use replacement callbacks
-    * $this->eprint(
-    *     $value,
-    *     'stripslashes',
-    *     'htmlspecialchars',
-    *     array('StaticClass', 'method'),
-    *     array($object, $method)
-    * );
-    * </code>
-    * 
-    * @access public
-    * 
-    * @param mixed $value The value to be escaped and printed.
-    * 
-    * @return void
-    *
-    */
-    
-    public function eprint($value)
-    {
-        // avoid the very slow call_user_func_array() when there
-        // are no custom escaping callbacks.  thanks to
-        // Andreas Korthaus for profiling the code to find
-        // the slowdown.
-        $num = func_num_args();
-        if ($num == 1) {
-            echo $this->escape($value);
-        } else {
-            $args = func_get_args();
-            echo call_user_func_array(
-                array($this, 'escape'),
-                $args
-            );
-        }
-    }
-    
-    
     // -----------------------------------------------------------------
     //
     // File management
