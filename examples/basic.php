@@ -1,6 +1,6 @@
 <?php
 ini_set('display_errors',true);
-error_reporting(E_STRICT);
+error_reporting(E_ALL);
 require_once __DIR__.'/../../autoload.php';
 
 // Set up a view object we'd like to display
@@ -8,7 +8,8 @@ $class = new stdClass();
 $class->var1 = '<p>This is var1 inside a standard class</p>';
 
 $savant = new \pear2\Templates\Savant\Main();
-$savant->addPath('template','templates');
+$savant->addTemplatePath('templates');
+
 // Display a simple string
 echo $savant->render('<h1>Welcome to the Savant Demo</h1>');
 

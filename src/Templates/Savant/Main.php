@@ -37,14 +37,16 @@ class Main
     */
     
     protected $__config = array(
-        'template_path' => array(''),
-        'resource_path' => array(),
         'compiler'      => null,
         'filters'       => array(),
         'helpers'       => array(),
         'helper_conf'   => array(),
         'escape'        => array(),
     );
+    
+    protected $template_path = array();
+    
+    protected $helper_path   = array();
     
     protected $output_controller;
     
@@ -98,13 +100,13 @@ class Main
         }
         
         // set the default resource search path
-        if (isset($config['resource_path'])) {
+        if (isset($config['helper_path'])) {
             // user-defined dirs
-            $this->setPath('resource', $config['resource_path']);
+            $this->setPath('helper', $config['helper_path']);
         } else {
             // no directories set, use the
             // default directory only
-            $this->setPath('resource', null);
+            $this->setPath('helper', null);
         }
         
         // set the output escaping callbacks
@@ -198,7 +200,7 @@ class Main
     public function getHelper($name)
     {
         // shorthand reference
-        $helpers =& $this->__config['helper'];
+        $helpers =& $this->__config['helpers'];
         
         // is the plugin method object already instantiated?
         if (! array_key_exists($name, $helpers)) {
@@ -483,6 +485,36 @@ class Main
     // -----------------------------------------------------------------
     
     
+    function setTemplatePath($path)
+    {
+        $this->setPath('template', $path);
+    }
+    
+    function getTemplatePath()
+    {
+        return $this->template_path;
+    }
+    
+    function addTemplatePath($path)
+    {
+        $this->addPath('template', $path);
+    }
+    
+    function setHelperPath($path)
+    {
+        $this->setPath('helper', $path);
+    }
+    
+    function getHelperPath()
+    {
+        return $this->helper_path;
+    }
+    
+    function addHelperPath($path)
+    {
+        $this->addPath('helper', $path);
+    }
+    
     /**
     *
     * Sets an entire array of search paths for templates or resources.
@@ -490,7 +522,7 @@ class Main
     * @access public
     *
     * @param string $type The type of path to set, typically 'template'
-    * or 'resource'.
+    * or 'helper'.
     * 
     * @param string|array $path The new set of search paths.  If null or
     * false, resets to the current directory only.
@@ -499,10 +531,10 @@ class Main
     *
     */
     
-    public function setPath($type, $path)
+    protected function setPath($type, $path)
     {
         // clear out the prior search dirs
-        $this->__config[$type . '_path'] = array();
+        $this->{$type . '_path'} = array();
         
         // always add the fallback directories as last resort
         switch (strtolower($type)) {
@@ -510,9 +542,9 @@ class Main
             // the current directory
             $this->addPath($type, '.');
             break;
-        case 'resource':
-            // the Savant3 distribution resources
-            $this->addPath($type, dirname(__FILE__) . '/Savant3/resources/');
+        case 'helper':
+            // the Savant distribution helpers
+            $this->addPath($type, dirname(__FILE__) . '/Helper');
             break;
         }
         
@@ -533,7 +565,7 @@ class Main
     *
     */
     
-    public function addPath($type, $path)
+    protected function addPath($type, $path)
     {
         // convert from path string to array of directories
         if (is_string($path) && ! strpos($path, '://')) {
@@ -572,7 +604,7 @@ class Main
             
             // add to the top of the search dirs
             array_unshift(
-                $this->__config[$type . '_path'],
+                $this->{$type . '_path'},
                 $dir
             );
         }
@@ -595,7 +627,7 @@ class Main
     public function findFile($type, $file)
     {
         // get the set of paths
-        $set = $this->__config[$type . '_path'];
+        $set = $this->{$type . '_path'};
         
         // start looping through the path set
         foreach ($set as $path) {
