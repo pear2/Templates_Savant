@@ -92,21 +92,21 @@ class Main
         // set the default template search path
         if (isset($config['template_path'])) {
             // user-defined dirs
-            $this->setPath('template', $config['template_path']);
+            $this->setTemplatePath($config['template_path']);
         } else {
             // no directories set, use the
             // default directory only
-            $this->setPath('template', null);
+            $this->setTemplatePath();
         }
         
         // set the default resource search path
         if (isset($config['helper_path'])) {
             // user-defined dirs
-            $this->setPath('helper', $config['helper_path']);
+            $this->setHelperPath($config['helper_path']);
         } else {
             // no directories set, use the
             // default directory only
-            $this->setPath('helper', null);
+            $this->setHelperPath();
         }
         
         // set the output escaping callbacks
@@ -485,7 +485,7 @@ class Main
     // -----------------------------------------------------------------
     
     
-    function setTemplatePath($path)
+    function setTemplatePath($path = null)
     {
         $this->setPath('template', $path);
     }
@@ -500,7 +500,7 @@ class Main
         $this->addPath('template', $path);
     }
     
-    function setHelperPath($path)
+    function setHelperPath($path = null)
     {
         $this->setPath('helper', $path);
     }
