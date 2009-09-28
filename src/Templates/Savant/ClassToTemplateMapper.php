@@ -7,7 +7,7 @@ class ClassToTemplateMapper implements MapperInterface
      * Default template mapping can be temporarily overridden by 
      * assigning a direct template name.
      * 
-     * OutputController::$output_template['My_Class'] = 'My/Class_rss.tpl.php';
+     * ClassToTemplateMapper::$output_template['My_Class'] = 'My/Class_rss.tpl.php';
      * 
      * @var array
      */

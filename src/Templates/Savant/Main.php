@@ -55,6 +55,13 @@ class Main
      */
     protected $class_to_template;
     
+    /**
+     * How helpers are translated to class names
+     * 
+     * @var MapperInterface
+     */
+    protected $helper_to_class;
+    
     // -----------------------------------------------------------------
     //
     // Constructor and magic methods
@@ -198,7 +205,7 @@ class Main
             
             // not already instantiated, so load it up.
             // set up the class name.
-            $class = "pear2\\Templates\\Savant\\Helper\\$name";
+            $class = $this->getHelperToClassMapper()->map($name);
             
             // get the default configuration for the plugin.
             $helper_conf =& $this->__config['helper_conf'];
@@ -295,6 +302,19 @@ class Main
     public function setHelperConf($helper, $config = null)
     {
         $this->__config['helper_conf'][$helper] = $config;
+    }
+    
+    public function getHelperToClassMapper()
+    {
+        if (!isset($this->helper_to_class)) {
+            $this->setHelperToClassMapper(new HelperToClassMapper());
+        }
+        return $this->helper_to_class;
+    }
+    
+    public function setHelperToClassMapper(MapperInterface $mapper)
+    {
+        $this->helper_to_class = $mapper;
     }
     
     
