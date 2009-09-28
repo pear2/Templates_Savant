@@ -42,7 +42,6 @@ class Main
         'compiler'      => null,
         'filters'       => array(),
         'plugins'       => array(),
-        'template'      => null,
         'plugin_conf'   => array(),
         'escape'        => array(),
     );
@@ -342,24 +341,6 @@ class Main
     public function setPluginConf($plugin, $config = null)
     {
         $this->__config['plugin_conf'][$plugin] = $config;
-    }
-    
-    
-    /**
-    *
-    * Sets the template name to use.
-    *
-    * @access public
-    *
-    * @param string $template The template name.
-    *
-    * @return void
-    *
-    */
-    
-    public function setTemplate($template)
-    {
-        $this->__config['template'] = $template;
     }
     
     
