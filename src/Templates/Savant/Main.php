@@ -44,6 +44,8 @@ class Main
         'escape'        => array(),
     );
     
+    protected $template;
+    
     protected $template_path = array();
     
     protected $helper_path   = array();
@@ -127,16 +129,8 @@ class Main
         }
         
         $savant =& $this;
-        $this->output_controller = function($view, $template = null) use ($savant) {
-                if ($template == NULL) {
-                    if ($view instanceof ObjectProxy) {
-                        $class = $view->__getClass();
-                    } else {
-                        $class = get_class($view);
-                    }
-                    $template = $savant->getTemplateFilename($class);
-                }
-                $file = $savant->findFile('template', $template);
+        $this->output_controller = function($view) use ($savant) {
+                $file = $savant->findFile('template', $savant->getTemplate());
                 if (!$file) {
                     echo 'Could not find template!';
                 }
@@ -144,6 +138,11 @@ class Main
                 include $file;
                 return $savant->applyFilters(ob_get_clean());
             };
+    }
+    
+    function getTemplate()
+    {
+        return $this->template;
     }
     
     
@@ -167,21 +166,11 @@ class Main
         return call_user_func_array(array($helper, $func), $args);
     }
     
-    
-    /**
-    * 
-    * Reports the API version for this class.
-    * 
-    * @access public
-    * 
-    * @return string A PHP-standard version number.
-    * 
-    */
-    
-    public function apiVersion()
-    {
-        return '@package_version@';
-    }
+    // -----------------------------------------------------------------
+    //
+    // Public configuration management (getters and setters).
+    // 
+    // -----------------------------------------------------------------
     
     
     /**
@@ -227,13 +216,6 @@ class Main
         // return the plugin object
         return $helpers[$name];
     }
-    
-    
-    // -----------------------------------------------------------------
-    //
-    // Public configuration management (getters and setters).
-    // 
-    // -----------------------------------------------------------------
     
     
     /**
@@ -317,6 +299,19 @@ class Main
     public function setHelperToClassMapper(MapperInterface $mapper)
     {
         $this->helper_to_class = $mapper;
+    }
+    
+    function setClassToTemplateMapper(MapperInterface $mapper)
+    {
+        $this->class_to_template = $mapper;
+    }
+    
+    function getClassToTemplateMapper()
+    {
+        if (!isset($this->class_to_template)) {
+            $this->setClassToTemplateMapper(new ClassToTemplateMapper());
+        }
+        return $this->class_to_template;
     }
     
     
@@ -725,38 +720,22 @@ class Main
     
     protected function fetch($mixed, $template = null)
     {
+        if ($template) {
+            $this->template = $template;
+        } else {
+            if ($mixed instanceof ObjectProxy) {
+                $class = $mixed->__getClass();
+            } else {
+                $class = get_class($mixed);
+            }
+            $this->template = $this->getClassToTemplateMapper()->map($class);
+        }
         $outputcontroller = $this->output_controller;
         if (is_object($mixed)
             && count($this->__config['escape'])) {
             $mixed = new ObjectProxy($mixed, $this);
         }
-        return $outputcontroller($mixed, $template);
-    }
-    
-    /**
-     * This function maps a class name to a template filename.
-     * 
-     * My_Class => My/Class.tpl.php
-     * 
-     * @see OutputController::$classname_replacment
-     * @see OutputController::$directory_separator
-     * @see OutputController::$output_template
-     * 
-     * @param string $class The class to get template filename for.
-     * 
-     * @return string
-     */
-    function getTemplateFilename($class)
-    {
-        if (!isset($this->class_to_template)) {
-            $this->setClassToTemplateMapper(new ClassToTemplateMapper());
-        }
-        return $this->class_to_template->map($class);
-    }
-    
-    function setClassToTemplateMapper(MapperInterface $mapper)
-    {
-        $this->class_to_template = $mapper;
+        return $outputcontroller($mixed);
     }
     
     /**

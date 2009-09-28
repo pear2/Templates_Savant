@@ -1,6 +1,6 @@
 <?php
 ini_set('display_errors',true);
-error_reporting(E_ALL);
+error_reporting(E_ALL^E_STRICT);
 require_once __DIR__.'/../../autoload.php';
 
 // Set up a view object we'd like to display
