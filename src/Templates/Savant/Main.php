@@ -41,8 +41,8 @@ class Main
         'resource_path' => array(),
         'compiler'      => null,
         'filters'       => array(),
-        'plugins'       => array(),
-        'plugin_conf'   => array(),
+        'helpers'       => array(),
+        'helper_conf'   => array(),
         'escape'        => array(),
     );
     
@@ -126,10 +126,10 @@ class Main
             $this->setEscape($config['escape']);
         }
         
-        // set the default plugin configs
-        if (isset($config['plugin_conf']) && is_array($config['plugin_conf'])) {
-            foreach ($config['plugin_conf'] as $name => $opts) {
-                $this->setPluginConf($name, $opts);
+        // set the default helper configs
+        if (isset($config['helper_conf']) && is_array($config['helper_conf'])) {
+            foreach ($config['helper_conf'] as $name => $opts) {
+                $this->setHelperConf($name, $opts);
             }
         }
         
@@ -161,7 +161,7 @@ class Main
     
     /**
     *
-    * Executes a main plugin method with arbitrary parameters.
+    * Executes a main helper method with arbitrary parameters.
     * 
     * @access public
     * 
@@ -175,33 +175,8 @@ class Main
     
     public function __call($func, $args)
     {
-        $plugin = $this->plugin($func);
-        
-        // try to avoid the very-slow call_user_func_array()
-        // for plugins with very few parameters.  thanks to
-        // Andreas Korthaus for profiling the code to find
-        // the slowdown.
-        switch (count($args)) {
-        
-        case 0:
-            return $plugin->$func();
-        
-        case 1:
-            return $plugin->$func($args[0]);
-            break;
-            
-        case 2:
-            return $plugin->$func($args[0], $args[1]);
-            break;
-            
-        case 3:
-            return $plugin->$func($args[0], $args[1], $args[2]);
-            break;
-        
-        default:
-            return call_user_func_array(array($plugin, $func), $args);
-            break;
-        }
+        $helper = $this->getHelper($func);
+        return call_user_func_array(array($helper, $func), $args);
     }
     
     
@@ -223,46 +198,46 @@ class Main
     
     /**
     * 
-    * Returns an internal plugin object; creates it as needed.
+    * Returns an internal helper object; creates it as needed.
     * 
     * @access public
     * 
     * @param string $name The plugin name.  If this plugin has not
     * been created yet, this method creates it automatically.
     *
-    * @return mixed The plugin object.
+    * @return mixed The helper object.
     * 
     */
     
-    public function plugin($name)
+    public function getHelper($name)
     {
         // shorthand reference
-        $plugins =& $this->__config['plugins'];
+        $helpers =& $this->__config['helper'];
         
         // is the plugin method object already instantiated?
-        if (! array_key_exists($name, $plugins)) {
+        if (! array_key_exists($name, $helpers)) {
             
             // not already instantiated, so load it up.
             // set up the class name.
-            $class = "pear2\\Templates\\Savant\\Plugin\\$name";
+            $class = "pear2\\Templates\\Savant\\Helper\\$name";
             
             // get the default configuration for the plugin.
-            $plugin_conf =& $this->__config['plugin_conf'];
-            if (! empty($plugin_conf[$name])) {
-                $opts = $plugin_conf[$name];
+            $helper_conf =& $this->__config['helper_conf'];
+            if (! empty($helper_conf[$name])) {
+                $opts = $helper_conf[$name];
             } else {
                 $opts = array();
             }
             
             // add the Savant reference
-            $opts['Savant'] = $this;
+            $opts['savant'] = $this;
             
             // instantiate the plugin with its options.
-            $plugins[$name] = new $class($opts);
+            $helpers[$name] = new $class($opts);
         }
     
         // return the plugin object
-        return $plugins[$name];
+        return $helpers[$name];
     }
     
     
@@ -326,11 +301,11 @@ class Main
     
     /**
     *
-    * Sets config array for a plugin.
+    * Sets config array for a helper.
     * 
     * @access public
     * 
-    * @param string $plugin The plugin to configure.
+    * @param string $helper The plugin to configure.
     * 
     * @param array $config The configuration array for the plugin.
     * 
@@ -338,9 +313,9 @@ class Main
     *
     */
     
-    public function setPluginConf($plugin, $config = null)
+    public function setHelperConf($helper, $config = null)
     {
-        $this->__config['plugin_conf'][$plugin] = $config;
+        $this->__config['helper_conf'][$helper] = $config;
     }
     
     

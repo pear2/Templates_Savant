@@ -2,9 +2,9 @@
 
 /**
 * 
-* Abstract Savant3_Plugin class.
+* Abstract Savant Heler class.
 * 
-* @package Savant3
+* @package Savant
 * 
 * @author Paul M. Jones <pmjones@ciaweb.net>
 * 
@@ -16,19 +16,18 @@
 
 /**
 * 
-* Abstract Savant3_Plugin class.
+* Abstract Savant Helper class.
 *
 * You have to extend this class for it to be useful; e.g., "class
-* Savant3_Plugin_example extends Savant2_Plugin".  Be sure to add a
-* method named for the plugin itself; e.g., "function example()".
+* Savant\Helper\example extends pear2\Templates\Savant\Helper".
 * 
-* @package Savant3
+* @package Savant
 * 
 * @author Paul M. Jones <pmjones@ciaweb.net>
 * 
 */
 namespace pear2\Templates\Savant;
-abstract class Plugin
+abstract class Helper
 {
     
     /**
@@ -41,7 +40,7 @@ abstract class Plugin
     * 
     */
     
-    protected $Savant = null;
+    protected $savant = null;
     
     
     /**
