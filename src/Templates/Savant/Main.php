@@ -681,7 +681,7 @@ class Main
     // -----------------------------------------------------------------
     
     
-    function render($mixed, $template = null)
+    function render($mixed = null, $template = null)
     {
         if (is_array($mixed)) {
             return $this->renderArray($mixed, $template);
@@ -691,7 +691,7 @@ class Main
             return $this->renderObject($mixed, $template);
         }
         
-        return $this->renderString($mixed, $template);
+        return $this->renderString((string) $mixed, $template);
     }
     
     protected function renderString($string, $template = null)

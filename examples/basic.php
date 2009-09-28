@@ -24,7 +24,7 @@ echo $savant->render($class);
 // Display the object using a specific template
 echo $savant->render($class, 'MyTemplate.tpl.php');
 
-$savant->render('<h2>Output Filtering</h2>');
+echo $savant->render('<h2>Output Filtering</h2>');
 $savant->addFilters('htmlspecialchars');
 
 // Now show an entire template with htmlspecialchars
