@@ -674,6 +674,8 @@ class Main
     
     protected function renderString($string, $template = null)
     {
+        $string = $this->escape($string);
+        
         if ($template) {
             return $this->fetch($string, $template);
         }
@@ -720,7 +722,7 @@ class Main
             $this->template = $template;
         } else {
             if (is_object($mixed)
-                && count($this->__config['escape'])) {
+                && count($this->getEscape())) {
                 $mixed = new ObjectProxy($mixed, $this);
                 $class = $mixed->__getClass();
             } else {
