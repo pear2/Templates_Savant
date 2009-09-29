@@ -5,7 +5,7 @@ class HelperToClassMapper implements MapperInterface
 {
     function map($name)
     {
-        return '\\pear2\\Templates\\Savant\\Helper\\'.$name;
+        return 'pear2\\Templates\\Savant\\Helper\\'.$name;
     }
 }
 ?>
