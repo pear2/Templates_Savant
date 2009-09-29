@@ -129,7 +129,7 @@ class Main
         }
         
         $savant =& $this;
-        $this->output_controller = function($view, $file) use ($savant) {
+        $this->output_controller = function($context, $file) use ($savant) {
                 ob_start();
                 include $file;
                 return $savant->applyFilters(ob_get_clean());
