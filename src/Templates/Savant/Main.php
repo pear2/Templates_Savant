@@ -129,11 +129,7 @@ class Main
         }
         
         $savant =& $this;
-        $this->output_controller = function($view) use ($savant) {
-                $file = $savant->findFile('template', $savant->getTemplate());
-                if (!$file) {
-                    echo 'Could not find template!';
-                }
+        $this->output_controller = function($view, $file) use ($savant) {
                 ob_start();
                 include $file;
                 return $savant->applyFilters(ob_get_clean());
@@ -723,7 +719,9 @@ class Main
         if ($template) {
             $this->template = $template;
         } else {
-            if ($mixed instanceof ObjectProxy) {
+            if (is_object($mixed)
+                && count($this->__config['escape'])) {
+                $mixed = new ObjectProxy($mixed, $this);
                 $class = $mixed->__getClass();
             } else {
                 $class = get_class($mixed);
@@ -731,11 +729,11 @@ class Main
             $this->template = $this->getClassToTemplateMapper()->map($class);
         }
         $outputcontroller = $this->output_controller;
-        if (is_object($mixed)
-            && count($this->__config['escape'])) {
-            $mixed = new ObjectProxy($mixed, $this);
+        $file = $this->findFile('template', $this->template);
+        if (!$file) {
+            throw new TemplateException('Could not find that template file.');
         }
-        return $outputcontroller($mixed);
+        return $outputcontroller($mixed, $file);
     }
     
     /**
