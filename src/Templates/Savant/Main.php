@@ -48,8 +48,6 @@ class Main
     
     protected $template_path = array();
     
-    protected $helper_path   = array();
-    
     protected $output_controller;
     
     /**
@@ -99,16 +97,6 @@ class Main
             // no directories set, use the
             // default directory only
             $this->setTemplatePath();
-        }
-        
-        // set the default resource search path
-        if (isset($config['helper_path'])) {
-            // user-defined dirs
-            $this->setHelperPath($config['helper_path']);
-        } else {
-            // no directories set, use the
-            // default directory only
-            $this->setHelperPath();
         }
         
         // set the output escaping callbacks
@@ -491,21 +479,6 @@ class Main
         $this->addPath('template', $path);
     }
     
-    function setHelperPath($path = null)
-    {
-        $this->setPath('helper', $path);
-    }
-    
-    function getHelperPath()
-    {
-        return $this->helper_path;
-    }
-    
-    function addHelperPath($path)
-    {
-        $this->addPath('helper', $path);
-    }
-    
     /**
     *
     * Sets an entire array of search paths for templates or resources.
@@ -528,15 +501,9 @@ class Main
         $this->{$type . '_path'} = array();
         
         // always add the fallback directories as last resort
-        switch (strtolower($type)) {
-        case 'template':
+        if ($type == 'template') {
             // the current directory
             $this->addPath($type, '.');
-            break;
-        case 'helper':
-            // the Savant distribution helpers
-            $this->addPath($type, dirname(__FILE__) . '/Helper');
-            break;
         }
         
         // actually add the user-specified directories
