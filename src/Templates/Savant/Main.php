@@ -116,7 +116,7 @@ class Main
             $this->addFilters($config['filters']);
         }
         
-        $savant =& $this;
+        $savant = $this;
         $this->output_controller = function($context, $file) use ($savant) {
                 ob_start();
                 include $file;

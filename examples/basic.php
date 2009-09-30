@@ -8,7 +8,7 @@ $class = new stdClass();
 $class->var1 = '<p>This is var1 inside a standard class</p>';
 
 $savant = new \pear2\Templates\Savant\Main();
-$savant->addTemplatePath('templates');
+$savant->addTemplatePath(__DIR__ . '/templates');
 
 // Display a simple string
 echo $savant->render('<h1>Welcome to the Savant Demo</h1>');
