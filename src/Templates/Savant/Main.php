@@ -47,8 +47,19 @@ class Main
     protected $template;
     
     protected $template_path = array();
-    
-    protected $output_controller;
+
+    /**
+     * A list of output controllers.  One does no filtering, another does.  This
+     * makes non-filtering controllers faster.
+     * @var array
+     */
+    protected $output_controllers = array();
+
+    /**
+     * 
+     * @var string
+     */
+    protected $selected_controller;
     
     /**
      * How class names are translated to templates
@@ -86,6 +97,19 @@ class Main
     
     public function __construct($config = null)
     {
+        $savant = $this;
+        $this->output_controllers['basic'] = function($context, $file) use ($savant) {
+                ob_start();
+                include $file;
+                return ob_get_clean();
+            };
+        $this->output_controllers['filter'] = function($context, $file) use ($savant) {
+                ob_start();
+                include $file;
+                return $savant->applyFilters(ob_get_clean());
+            };
+        $this->selected_controller = 'basic';
+
         // force the config to an array
         settype($config, 'array');
         
@@ -115,13 +139,6 @@ class Main
         if (isset($config['filters'])) {
             $this->addFilters($config['filters']);
         }
-        
-        $savant = $this;
-        $this->output_controller = function($context, $file) use ($savant) {
-                ob_start();
-                include $file;
-                return $savant->applyFilters(ob_get_clean());
-            };
     }
     
     function getTemplate()
@@ -641,12 +658,17 @@ class Main
     
     protected function renderString($string, $template = null)
     {
-        $string = $this->escape($string);
+        if ($this->__config['escape']) {
+            $string = $this->escape($string);
+        }
         
         if ($template) {
             return $this->fetch($string, $template);
         }
-        
+
+        if (!$this->__config['filters']) {
+            return $string;
+        }
         return $this->applyFilters($string);
     }
     
@@ -697,7 +719,7 @@ class Main
             }
             $this->template = $this->getClassToTemplateMapper()->map($class);
         }
-        $outputcontroller = $this->output_controller;
+        $outputcontroller = $this->output_controllers[$this->selected_controller];
         $file = $this->findFile('template', $this->template);
         if (!$file) {
             throw new TemplateException('Could not find the template '.$file);
@@ -786,6 +808,11 @@ class Main
     public function setFilters()
     {
         $this->__config['filters'] = (array) @func_get_args();
+        if (!$this->__config['filters']) {
+            $this->selected_controller = 'basic';
+        } else {
+            $this->selected_controller = 'filter';
+        }
     }
     
     
@@ -807,6 +834,7 @@ class Main
         // via the reference
         foreach ((array) @func_get_args() as $callback) {
             $this->__config['filters'][] = $callback;
+            $this->selected_controller = 'filter';
         }
     }
     
