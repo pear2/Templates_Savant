@@ -722,7 +722,7 @@ class Main
         $outputcontroller = $this->output_controllers[$this->selected_controller];
         $file = $this->findFile('template', $this->template);
         if (!$file) {
-            throw new TemplateException('Could not find the template '.$file);
+            throw new TemplateException('Could not find the template '.$this->template);
         }
         return $outputcontroller($mixed, $file);
     }
