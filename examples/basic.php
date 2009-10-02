@@ -34,13 +34,5 @@ echo $savant->render($class);
 // Ok, now remove the output filters
 $savant->setFilters();
 
-echo $savant->render('<h2>Variable Escaping</h2>');
-
-// Turn on some template variable escaping
-$savant->addEscape('htmlspecialchars');
-
-// Display the standard class, now with all variables accessed being escaped
-echo $savant->render($class);
-
 highlight_file(__FILE__);
 

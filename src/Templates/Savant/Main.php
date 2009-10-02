@@ -41,11 +41,28 @@ class Main
         'filters'       => array(),
         'helpers'       => array(),
         'helper_conf'   => array(),
-        'escape'        => array(),
+        'escape'        => 'htmlspecialchars',
     );
     
+    /**
+     * Parameters for escaping.
+     * @var array
+     */
+    protected $_escape = array(
+        'quotes'  => ENT_COMPAT,
+        'charset' => 'UTF-8',
+        );
+    
+    /**
+     * The output template to render using
+     * @var string
+     */
     protected $template;
     
+    /**
+     * An array of paths to look for template files in.
+     * @var array
+     */
     protected $template_path = array();
 
     /**
@@ -350,37 +367,6 @@ class Main
     
     
     /**
-    * 
-    * Adds to the callbacks used when calling $this->escape().
-    * 
-    * Each parameter passed to this function is treated as a separate
-    * callback.  For example:
-    * 
-    * <code>
-    * $savant->addEscape(
-    *     'stripslashes',
-    *     'htmlspecialchars',
-    *     array('StaticClass', 'method'),
-    *     array($object, $method)
-    * );
-    * </code>
-    * 
-    * @access public
-    *
-    * @return void
-    *
-    */
-    
-    public function addEscape()
-    {
-        $args = (array) @func_get_args();
-        $this->__config['escape'] = array_merge(
-            $this->__config['escape'], $args
-        );
-    }
-    
-    
-    /**
     *
     * Gets the array of output-escaping callbacks.
     *
@@ -397,78 +383,25 @@ class Main
     
     
     /**
-    *
-    * Applies escaping to a value.
-    * 
-    * You can override the predefined escaping callbacks by passing
-    * added parameters as replacement callbacks.
-    * 
-    * <code>
-    * // use predefined callbacks
-    * $result = $savant->escape($value);
-    * 
-    * // use replacement callbacks
-    * $result = $savant->escape(
-    *     $value,
-    *     'stripslashes',
-    *     'htmlspecialchars',
-    *     array('StaticClass', 'method'),
-    *     array($object, $method)
-    * );
-    * </code>
-    *
-    * 
-    * Unfortunately, a call to "echo htmlspecialchars()" is twice
-    * as fast as a call to "echo $this->escape()" under the default
-    * escaping (which is htmlspecialchars).  The benchmark showed
-    * 0.007 seconds for htmlspecialchars(), and 0.014 seconds for
-    * $this->escape(), on 300 calls each.
-    * 
-    * @access public
-    * 
-    * @param mixed $value The value to be escaped.
-    * 
-    * @return mixed
-    *
-    */
-    
-    public function escape($value)
+     * Escapes a value for output in a view script.
+     *
+     * If escaping mechanism is one of htmlspecialchars or htmlentities, uses
+     * {@link $_encoding} setting.
+     *
+     * @param mixed $var The output to escape.
+     * @return mixed The escaped value.
+     */
+    public function escape($var)
     {
-        // were custom callbacks passed?
-        if (func_num_args() == 1) {
-        
-            // no, only a value was passed.
-            // loop through the predefined callbacks.
-            foreach ($this->__config['escape'] as $func) {
-                // this if() shaves 0.001sec off of 300 calls.
-                if (is_string($func)) {
-                    $value = $func($value);
-                } else {
-                    $value = call_user_func($func, $value);
-                }
-            }
-            
-        } else {
-        
-            // yes, use the custom callbacks
-            $callbacks = func_get_args();
-            
-            // drop $value
-            array_shift($callbacks);
-            
-            // loop through custom callbacks.
-            foreach ($callbacks as $func) {
-                // this if() shaves 0.001sec off of 300 calls.
-                if (is_string($func)) {
-                    $value = $func($value);
-                } else {
-                    $value = call_user_func($func, $value);
-                }
-            }
-            
+        if (in_array($this->__config['escape'],
+                array('htmlspecialchars', 'htmlentities'))) {
+            return call_user_func($this->__config['escape'],
+                                  $var,
+                                  $this->_escape['quotes'],
+                                  $this->_escape['charset']);
         }
-        
-        return $value;
+
+        return call_user_func($this->__config['escape'], $var);
     }
     
     
@@ -656,9 +589,6 @@ class Main
     
     protected function renderString($string, $template = null)
     {
-        if ($this->__config['escape']) {
-            $string = $this->escape($string);
-        }
         
         if ($template) {
             return $this->fetch($string, $template);
@@ -708,13 +638,7 @@ class Main
         if ($template) {
             $this->template = $template;
         } else {
-            if (is_object($mixed)
-                && count($this->getEscape())) {
-                $mixed = new ObjectProxy($mixed, $this);
-                $class = $mixed->__getClass();
-            } else {
-                $class = get_class($mixed);
-            }
+            $class = get_class($mixed);
             $this->template = $this->getClassToTemplateMapper()->map($class);
         }
         $outputcontroller = $this->output_controllers[$this->selected_controller];
