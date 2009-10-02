@@ -207,11 +207,9 @@ class Main
                 $opts = array();
             }
             
-            // add the Savant reference
-            $opts['savant'] = $this;
-            
             // instantiate the plugin with its options.
             $helpers[$name] = new $class($opts);
+            $helpers[$name]->setSavant($this);
         }
     
         // return the plugin object

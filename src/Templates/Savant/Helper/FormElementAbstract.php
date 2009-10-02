@@ -196,8 +196,8 @@ abstract class FormElementAbstract extends HtmlElementAbstract
     protected function _hidden($name, $value = null, $attribs = null)
     {
         return '<input type="hidden"'
-             . ' name="' . $this->view->escape($name) . '"'
-             . ' value="' . $this->view->escape($value) . '"'
+             . ' name="' . $this->savant->escape($name) . '"'
+             . ' value="' . $this->savant->escape($value) . '"'
              . $this->_htmlAttribs($attribs) . $this->getClosingBracket();
     }
 }

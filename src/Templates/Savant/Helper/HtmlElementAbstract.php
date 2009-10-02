@@ -73,7 +73,7 @@ abstract class HtmlElementAbstract extends Savant\HelperAbstract
      */
     protected function _isXhtml()
     {
-        $doctype = $this->view->doctype();
+        $doctype = $this->savant->doctype();
         return $doctype->isXhtml();
     }
 
@@ -91,7 +91,7 @@ abstract class HtmlElementAbstract extends Savant\HelperAbstract
     {
         $xhtml = '';
         foreach ((array) $attribs as $key => $val) {
-            $key = $this->view->escape($key);
+            $key = $this->savant->escape($key);
 
             if (('on' == substr($key, 0, 2)) || ('constraints' == $key)) {
                 // Don't escape event attributes; _do_ substitute double quotes with singles
@@ -105,7 +105,7 @@ abstract class HtmlElementAbstract extends Savant\HelperAbstract
                 if (is_array($val)) {
                     $val = implode(' ', $val);
                 }
-                $val = $this->view->escape($val);
+                $val = $this->savant->escape($val);
             }
 
             if ('id' == $key) {

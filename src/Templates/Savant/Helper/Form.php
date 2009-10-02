@@ -45,7 +45,7 @@ class Form extends FormElementAbstract
         extract($info);
 
         if (!empty($id)) {
-            $id = ' id="' . $this->view->escape($id) . '"';
+            $id = ' id="' . $this->savant->escape($id) . '"';
         } else {
             $id = '';
         }

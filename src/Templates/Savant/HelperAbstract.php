@@ -43,25 +43,9 @@ abstract class HelperAbstract
     protected $savant = null;
     
     
-    /**
-    * 
-    * Constructor.
-    * 
-    * @access public
-    * 
-    * @param array $conf An array of configuration keys and values for
-    * this plugin.
-    * 
-    * @return void
-    * 
-    */
-    
-    public function __construct($conf = null)
+    function setSavant(Main $savant)
     {
-        settype($conf, 'array');
-        foreach ($conf as $key => $val) {
-            $this->$key = $val;
-        }
+        $this->savant = $savant;
     }
 }
 ?>
