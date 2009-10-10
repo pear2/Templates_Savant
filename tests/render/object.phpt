@@ -18,6 +18,8 @@ class Foo
 $object = new Foo();
 $object->var1  = ' is my class';
 
+$savant->setEscape();
+
 $test->assertEquals('Foo is my class', $savant->render($object), 'render object');
 
 $test->assertEquals('test', $savant->render($object, 'echostring.tpl.php'), 'render object with custom template');

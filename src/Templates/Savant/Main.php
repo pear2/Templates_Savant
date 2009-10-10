@@ -589,6 +589,9 @@ class Main
     
     protected function renderString($string, $template = null)
     {
+        if ($this->__config['escape']) {
+            $string = $this->escape($string);
+        }
         
         if ($template) {
             return $this->fetch($string, $template);
@@ -630,6 +633,10 @@ class Main
             }
             return $data;
         }
+        if (is_object($object)
+            && count($this->getEscape())) {
+            $object = new ObjectProxy($object, $this);
+        }
         return $this->fetch($object, $template);
     }
     
@@ -638,7 +645,11 @@ class Main
         if ($template) {
             $this->template = $template;
         } else {
-            $class = get_class($mixed);
+            if ($mixed instanceof ObjectProxy) {
+                $class = $mixed->__getClass();
+            } else {
+                $class = get_class($mixed);
+            }
             $this->template = $this->getClassToTemplateMapper()->map($class);
         }
         $outputcontroller = $this->output_controllers[$this->selected_controller];

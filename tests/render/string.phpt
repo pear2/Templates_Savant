@@ -10,13 +10,13 @@ $string = 'test';
 $test->assertEquals($string, $savant->render($string), 'render');
 
 $string = '<p></p>';
-$test->assertEquals($string, $savant->render($string), 'render string with special chars');
+$test->assertEquals(htmlspecialchars($string), $savant->render($string), 'render string with special chars');
 
 $string = 'test';
 $test->assertEquals($string, $savant->render($string, 'echostring.tpl.php'), 'render string through template');
 
 $string = '<p></p>';
-$test->assertEquals($string, $savant->render($string, 'echostring.tpl.php'), 'render string with special chars through template');
+$test->assertEquals(htmlspecialchars($string), $savant->render($string, 'echostring.tpl.php'), 'render string with special chars through template');
 ?>
 ===DONE===
 --EXPECT--
