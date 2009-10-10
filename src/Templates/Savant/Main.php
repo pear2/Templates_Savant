@@ -580,6 +580,16 @@ class Main
         return $this->$method($mixed, $template);
     }
     
+    protected function renderResource($resouce, $template = null)
+    {
+        throw new UnexpectedValueException('No way to render a resource!');
+    }
+    
+    protected function renderBoolean($bool, $template = null)
+    {
+        return $this->renderString((string)$bool, $template);
+    }
+    
     protected function renderDouble($double, $template = null)
     {
         return $this->renderString($double, $template);
