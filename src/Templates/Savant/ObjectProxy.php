@@ -32,9 +32,9 @@ class ObjectProxy
         
     }
     
-    function __call($method, $args)
+    function __call($name, $arguments)
     {
-        return $this->object->$method($args);
+        return call_user_func_array(array($this->object, $name), $arguments);
     }
     
     function __getClass()
