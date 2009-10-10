@@ -15,7 +15,11 @@ class ObjectProxy
     
     function __get($var)
     {
-        return $this->savant->escape($this->object->$var);
+        $var = $this->object->$var;
+        if (is_string($var)) {
+            return $this->savant->escape($var);
+        }
+        return $var;
     }
     
     function __raw($var)
