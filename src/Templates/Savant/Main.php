@@ -576,15 +576,18 @@ class Main
     
     function render($mixed = null, $template = null)
     {
-        if (is_array($mixed)) {
-            return $this->renderArray($mixed, $template);
-        }
-        
-        if (is_object($mixed)) {
-            return $this->renderObject($mixed, $template);
-        }
-        
-        return $this->renderString((string) $mixed, $template);
+        $method = 'render'.gettype($mixed);
+        return $this->$method($mixed, $template);
+    }
+    
+    protected function renderDouble($double, $template = null)
+    {
+        return $this->renderString($double, $template);
+    }
+    
+    protected function renderInteger($int, $template = null)
+    {
+        return $this->renderString($int, $template);
     }
     
     protected function renderString($string, $template = null)
