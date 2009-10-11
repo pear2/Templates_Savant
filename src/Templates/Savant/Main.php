@@ -56,6 +56,13 @@ class Main
      * @var string
      */
     protected $template;
+
+    /**
+     * To avoid stats on locating templates, populate this array with
+     * full path => 1 for any existing templates
+     * @var array
+     */
+    protected $templateMap = array();
     
     /**
      * An array of paths to look for template files in.
@@ -122,6 +129,22 @@ class Main
                 ob_start();
                 include $file;
                 return $savant->applyFilters(ob_get_clean());
+            };
+        $this->output_controllers['basiccompiled'] = function($context, $file) use ($savant) {
+                ob_start();
+                include $savant->template($file);
+                return ob_get_clean();
+            };
+        $this->output_controllers['filtercompiled'] = function($context, $file) use ($savant) {
+                ob_start();
+                include $savant->template($file);
+                return $savant->applyFilters(ob_get_clean());
+            };
+        $this->output_controllers['basicfastcompiled'] = function($context, $file) use ($savant) {
+                return include $savant->template($file);
+            };
+        $this->output_controllers['filterfastcompiled'] = function($context, $file) use ($savant) {
+                return $savant->applyFilters(include $savant->template($file));
             };
         $this->selected_controller = 'basic';
         
@@ -200,9 +223,25 @@ class Main
     * 
     */
     
-    public function setCompiler($compiler)
+    public function setCompiler(CompilerInterface $compiler)
     {
         $this->__config['compiler'] = $compiler;
+        if ($compiler instanceof FastCompilerInterface) {
+            switch ($this->selected_controller) {
+                case 'basic' :
+                case 'basiccompiled';
+                    $this->selected_controller = 'basicfastcompiled';
+                    break;
+                case 'filter' :
+                case 'filtercompiled' :
+                    $this->selected_controller = 'filterfastcompiled';
+                    break;
+            }
+            return;
+        }
+        if (!strpos($this->selected_controller, 'compiled')) {
+            $this->selected_controller .= 'compiled';
+        }
     }
     
     function setClassToTemplateMapper(MapperInterface $mapper)
@@ -342,7 +381,7 @@ class Main
     public function addTemplatePath($path)
     {
         // convert from path string to array of directories
-        if (is_string($path) && ! strpos($path, '://')) {
+        if (is_string($path) && !strpos($path, '://')) {
         
             // the path config is a string, and it's not a stream
             // identifier (the "://" piece). add it as a path string.
@@ -368,14 +407,20 @@ class Main
             $dir = trim($dir);
             
             // add trailing separators as needed
-            if (strpos($dir, '://') && substr($dir, -1) != '/') {
-                // stream
-                $dir .= '/';
+            if (strpos($dir, '://')) {
+                if (substr($dir, -1) != '/') {
+                    // stream
+                    $dir .= '/';
+                }
             } elseif (substr($dir, -1) != DIRECTORY_SEPARATOR) {
+                if (false !== strpos($dir, '..')) {
+                    // checking for weird paths here removes directory traversal threat
+                    throw new UnexpectedValueException('upper directory reference .. cannot be used in template path');
+                }
                 // directory
                 $dir .= DIRECTORY_SEPARATOR;
             }
-            
+
             // add to the top of the search dirs
             array_unshift(
                 $this->template_path,
@@ -398,36 +443,29 @@ class Main
     
     public function findTemplateFile($file)
     {
+        if (false !== strpos($file, '..')) {
+            // checking for weird path here removes directory traversal threat
+            throw new UnexpectedValueException('upper directory reference .. cannot be used in template filename');
+        }
         
         // start looping through the path set
         foreach ($this->template_path as $path) {
-            
             // get the path to the file
             $fullname = $path . $file;
-            
-            // is the path based on a stream?
-            if (strpos($path, '://') === false) {
-                // not a stream, so do a realpath() to avoid
-                // directory traversal attempts on the local file
-                // system. Suggested by Ian Eure, initially
-                // rejected, but then adopted when the secure
-                // compiler was added.
-                $path = realpath($path); // needed for substr() later
-                $fullname = realpath($fullname);
-            }
-            
-            // the substr() check added by Ian Eure to make sure
-            // that the realpath() results in a directory registered
-            // with Savant so that non-registered directores are not
-            // accessible via directory traversal attempts.
-            if (file_exists($fullname) && is_readable($fullname) &&
-                substr($fullname, 0, strlen($path)) == $path) {
+
+            if (isset($this->templateMap[$fullname])) {
                 return $fullname;
             }
+
+            if (!@is_readable($fullname)) {
+                continue;
+            }
+
+            return $fullname;
         }
-        
+
         // could not find the file in the set of paths
-        return false;
+        throw new TemplateException('Could not find the template ' . $file);
     }
     
     
@@ -510,9 +548,6 @@ class Main
             $this->template = $this->getClassToTemplateMapper()->map($class);
         }
         $file = $this->findTemplateFile($this->template);
-        if (!$file) {
-            throw new TemplateException('Could not find the template '.$this->template);
-        }
         $outputcontroller = $this->output_controllers[$this->selected_controller];
         return $outputcontroller($mixed, $file);
     }
@@ -524,40 +559,30 @@ class Main
     * By default, Savant does not compile templates, it uses PHP as the
     * markup language, so the "compiled" template is the same as the source
     * template.
-    * 
-    * Used inside a template script like so:
-    * 
-    * <code>
-    * include $this->template($tpl);
-    * </code>
-    * 
-    * @access protected
+    *
+    * If a compiler is specific, this method is used to look up the compiled
+    * template script name
     *
     * @param string $tpl The template source name to look for.
     * 
     * @return string The full path to the compiled template script.
     * 
-    * @throws object An error object with a 'ERR_TEMPLATE' code.
+    * @throws pear2\Templates\Savant\UnexpectedValueException
+    * @throws pear2\Templates\Savant\Exception
     * 
     */
     
-    protected function template($tpl = null)
+    public function template($tpl = null)
     {
         // find the template source.
         $file = $this->findTemplateFile($tpl);
-        if (! $file) {
-            throw new TemplateException('Template error. The template, '.$tpl.', was not found.');
-        }
         
         // are we compiling source into a script?
         if ($this->__config['compiler']) {
             // compile the template source and get the path to the
             // compiled script (will be returned instead of the
             // source path)
-            $result = call_user_func(
-                array($this->__config['compiler'], 'compile'),
-                $file
-            );
+            $result = $this->__config['compiler']->compile($file, $this);
         } else {
             // no compiling requested, use the source path
             $result = $file;

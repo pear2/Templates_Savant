@@ -1,4 +1,2 @@
-<?php
-echo get_class($context);
-echo $context->var1;
-?>
+<?php echo get_class($context) ?>
+<?php echo $context->var1 ?>

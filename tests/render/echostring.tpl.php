@@ -1,3 +1,1 @@
-<?php
-echo $context;
-?>
+<?php echo $context ?>
