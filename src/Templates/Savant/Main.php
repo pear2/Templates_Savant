@@ -4,10 +4,10 @@
  *
  * PHP version 5
  *
- * @category  Yourcategory
+ * @category  Templates
  * @package   PEAR2_Templates_Savant
- * @author    Your Name <handle@php.net>
- * @copyright 2009 Your Name
+ * @author    Brett Bieber <saltybeagle@php.net>
+ * @copyright 2009 Brett Bieber
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version   SVN: $Id$
  * @link      http://svn.php.net/repository/pear2/PEAR2_Templates_Savant
@@ -16,10 +16,10 @@
 /**
  * Main class for PEAR2_Templates_Savant
  *
- * @category  Yourcategory
+ * @category  Templates
  * @package   PEAR2_Templates_Savant
- * @author    Your Name <handle@php.net>
- * @copyright 2009 Your Name
+ * @author    Brett Bieber <saltybeagle@php.net>
+ * @copyright 2009 Brett Bieber
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @link      http://svn.php.net/repository/pear2/PEAR2_Templates_Savant
  */
@@ -39,8 +39,6 @@ class Main
     protected $__config = array(
         'compiler'      => null,
         'filters'       => array(),
-        'helpers'       => array(),
-        'helper_conf'   => array(),
         'escape'        => 'htmlspecialchars',
     );
     
@@ -63,7 +61,7 @@ class Main
      * An array of paths to look for template files in.
      * @var array
      */
-    protected $template_path = array();
+    protected $template_path = array('./');
 
     /**
      * A list of output controllers.  One does no filtering, another does.  This
@@ -126,30 +124,16 @@ class Main
                 return $savant->applyFilters(ob_get_clean());
             };
         $this->selected_controller = 'basic';
-
-        // force the config to an array
-        settype($config, 'array');
         
         // set the default template search path
         if (isset($config['template_path'])) {
             // user-defined dirs
             $this->setTemplatePath($config['template_path']);
-        } else {
-            // no directories set, use the
-            // default directory only
-            $this->setTemplatePath();
         }
         
         // set the output escaping callbacks
         if (isset($config['escape'])) {
             $this->setEscape($config['escape']);
-        }
-        
-        // set the default helper configs
-        if (isset($config['helper_conf']) && is_array($config['helper_conf'])) {
-            foreach ($config['helper_conf'] as $name => $opts) {
-                $this->setHelperConf($name, $opts);
-            }
         }
         
         // set the default filter callbacks
@@ -164,74 +148,11 @@ class Main
     }
     
     
-    /**
-    *
-    * Executes a main helper method with arbitrary parameters.
-    * 
-    * @access public
-    * 
-    * @param string $func The plugin method name.
-    *
-    * @param array $args The parameters passed to the method.
-    *
-    * @return mixed The plugin output
-    * 
-    */
-    
-    public function __call($func, $args)
-    {
-        $helper = $this->getHelper($func);
-        return call_user_func_array(array($helper, $func), $args);
-    }
-    
     // -----------------------------------------------------------------
     //
     // Public configuration management (getters and setters).
     // 
     // -----------------------------------------------------------------
-    
-    
-    /**
-    * 
-    * Returns an internal helper object; creates it as needed.
-    * 
-    * @access public
-    * 
-    * @param string $name The plugin name.  If this plugin has not
-    * been created yet, this method creates it automatically.
-    *
-    * @return mixed The helper object.
-    * 
-    */
-    
-    public function getHelper($name)
-    {
-        // shorthand reference
-        $helpers =& $this->__config['helpers'];
-        
-        // is the plugin method object already instantiated?
-        if (! array_key_exists($name, $helpers)) {
-            
-            // not already instantiated, so load it up.
-            // set up the class name.
-            $class = $this->getHelperToClassMapper()->map($name);
-            
-            // get the default configuration for the plugin.
-            $helper_conf =& $this->__config['helper_conf'];
-            if (! empty($helper_conf[$name])) {
-                $opts = $helper_conf[$name];
-            } else {
-                $opts = array();
-            }
-            
-            // instantiate the plugin with its options.
-            $helpers[$name] = new $class($opts);
-            $helpers[$name]->setSavant($this);
-        }
-    
-        // return the plugin object
-        return $helpers[$name];
-    }
     
     
     /**
@@ -282,39 +203,6 @@ class Main
     public function setCompiler($compiler)
     {
         $this->__config['compiler'] = $compiler;
-    }
-    
-    
-    /**
-    *
-    * Sets config array for a helper.
-    * 
-    * @access public
-    * 
-    * @param string $helper The plugin to configure.
-    * 
-    * @param array $config The configuration array for the plugin.
-    * 
-    * @return void
-    *
-    */
-    
-    public function setHelperConf($helper, $config = null)
-    {
-        $this->__config['helper_conf'][$helper] = $config;
-    }
-    
-    public function getHelperToClassMapper()
-    {
-        if (!isset($this->helper_to_class)) {
-            $this->setHelperToClassMapper(new HelperToClassMapper());
-        }
-        return $this->helper_to_class;
-    }
-    
-    public function setHelperToClassMapper(MapperInterface $mapper)
-    {
-        $this->helper_to_class = $mapper;
     }
     
     function setClassToTemplateMapper(MapperInterface $mapper)
@@ -411,20 +299,9 @@ class Main
     //
     // -----------------------------------------------------------------
     
-    
-    function setTemplatePath($path = null)
-    {
-        $this->setPath('template', $path);
-    }
-    
     function getTemplatePath()
     {
         return $this->template_path;
-    }
-    
-    function addTemplatePath($path)
-    {
-        $this->addPath('template', $path);
     }
     
     /**
@@ -432,9 +309,6 @@ class Main
     * Sets an entire array of search paths for templates or resources.
     *
     * @access public
-    *
-    * @param string $type The type of path to set, typically 'template'
-    * or 'helper'.
     * 
     * @param string|array $path The new set of search paths.  If null or
     * false, resets to the current directory only.
@@ -443,19 +317,16 @@ class Main
     *
     */
     
-    protected function setPath($type, $path)
+    public function setTemplatePath($path = null)
     {
         // clear out the prior search dirs
-        $this->{$type . '_path'} = array();
+        $this->template_path = array();
         
         // always add the fallback directories as last resort
-        if ($type == 'template') {
-            // the current directory
-            $this->addPath($type, '.');
-        }
+        $this->addTemplatePath('.');
         
         // actually add the user-specified directories
-        $this->addPath($type, $path);
+        $this->addTemplatePath($path);
     }
     
     
@@ -471,7 +342,7 @@ class Main
     *
     */
     
-    protected function addPath($type, $path)
+    public function addTemplatePath($path)
     {
         // convert from path string to array of directories
         if (is_string($path) && ! strpos($path, '://')) {
@@ -510,7 +381,7 @@ class Main
             
             // add to the top of the search dirs
             array_unshift(
-                $this->{$type . '_path'},
+                $this->template_path,
                 $dir
             );
         }
@@ -521,8 +392,6 @@ class Main
     * 
     * Searches the directory paths for a given file.
     * 
-    * @param array $type The type of path to search (template or resource).
-    * 
     * @param string $file The file name to look for.
     * 
     * @return string|bool The full path and file name for the target file,
@@ -530,13 +399,11 @@ class Main
     *
     */
     
-    public function findFile($type, $file)
+    public function findTemplateFile($file)
     {
-        // get the set of paths
-        $set = $this->{$type . '_path'};
         
         // start looping through the path set
-        foreach ($set as $path) {
+        foreach ($this->template_path as $path) {
             
             // get the path to the file
             $fullname = $path . $file;
@@ -628,24 +495,6 @@ class Main
     
     protected function renderObject($object, $template = null)
     {
-        if ($object instanceof Cacheable) {
-            $key = $object->getCacheKey();
-            if ($key !== false && $data = $this->cache->get($key)) {
-                // Tell the object we have cached data and will output that.
-                $object->preRun(true);
-            } else {
-                // Content should be cached, but none could be found.
-                $object->preRun(false);
-                $object->run();
-                
-                $data = $this->fetch($object);
-                
-                if ($key !== false) {
-                    $this->cache->save($data, $key);
-                }
-            }
-            return $data;
-        }
         if (is_object($object)
             && count($this->getEscape())) {
             $object = new ObjectProxy($object, $this);
@@ -666,7 +515,7 @@ class Main
             $this->template = $this->getClassToTemplateMapper()->map($class);
         }
         $outputcontroller = $this->output_controllers[$this->selected_controller];
-        $file = $this->findFile('template', $this->template);
+        $file = $this->findTemplateFile($this->template);
         if (!$file) {
             throw new TemplateException('Could not find the template '.$this->template);
         }
@@ -700,7 +549,7 @@ class Main
     protected function template($tpl = null)
     {
         // find the template source.
-        $file = $this->findFile('template', $tpl);
+        $file = $this->findTemplateFile($tpl);
         if (! $file) {
             throw new TemplateException('Template error. The template, '.$tpl.', was not found.');
         }
