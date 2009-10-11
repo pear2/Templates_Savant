@@ -58,6 +58,12 @@ class Main
     protected $template;
 
     /**
+     * stack of templates, so we can access the parent template
+     * @var array
+     */
+    protected $templateStack = array();
+
+    /**
      * To avoid stats on locating templates, populate this array with
      * full path => 1 for any existing templates
      * @var array
@@ -90,13 +96,6 @@ class Main
      */
     protected $class_to_template;
     
-    /**
-     * How helpers are translated to class names
-     * 
-     * @var MapperInterface
-     */
-    protected $helper_to_class;
-    
     // -----------------------------------------------------------------
     //
     // Constructor and magic methods
@@ -120,30 +119,30 @@ class Main
     public function __construct($config = null)
     {
         $savant = $this;
-        $this->output_controllers['basic'] = function($context, $file) use ($savant) {
+        $this->output_controllers['basic'] = function($context, $parent, $file) use ($savant) {
                 ob_start();
                 include $file;
                 return ob_get_clean();
             };
-        $this->output_controllers['filter'] = function($context, $file) use ($savant) {
+        $this->output_controllers['filter'] = function($context, $parent, $file) use ($savant) {
                 ob_start();
                 include $file;
                 return $savant->applyFilters(ob_get_clean());
             };
-        $this->output_controllers['basiccompiled'] = function($context, $file) use ($savant) {
+        $this->output_controllers['basiccompiled'] = function($context, $parent, $file) use ($savant) {
                 ob_start();
                 include $savant->template($file);
                 return ob_get_clean();
             };
-        $this->output_controllers['filtercompiled'] = function($context, $file) use ($savant) {
+        $this->output_controllers['filtercompiled'] = function($context, $parent, $file) use ($savant) {
                 ob_start();
                 include $savant->template($file);
                 return $savant->applyFilters(ob_get_clean());
             };
-        $this->output_controllers['basicfastcompiled'] = function($context, $file) use ($savant) {
+        $this->output_controllers['basicfastcompiled'] = function($context, $parent, $file) use ($savant) {
                 return include $savant->template($file);
             };
-        $this->output_controllers['filterfastcompiled'] = function($context, $file) use ($savant) {
+        $this->output_controllers['filterfastcompiled'] = function($context, $parent, $file) use ($savant) {
                 return $savant->applyFilters(include $savant->template($file));
             };
         $this->selected_controller = 'basic';
@@ -289,7 +288,7 @@ class Main
     
     public function setEscape()
     {
-        $this->__config['escape'] = (array) @func_get_args();
+        $this->__config['escape'] = @func_get_args();
     }
     
     
@@ -320,15 +319,18 @@ class Main
      */
     public function escape($var)
     {
-        if (in_array($this->__config['escape'],
-                array('htmlspecialchars', 'htmlentities'))) {
-            return call_user_func($this->__config['escape'],
-                                  $var,
-                                  $this->_escape['quotes'],
-                                  $this->_escape['charset']);
+        foreach ($this->__config['escape'] as $escape) {
+            if (in_array($escape,
+                    array('htmlspecialchars', 'htmlentities'), true)) {
+                $var = call_user_func($escape,
+                                      $var,
+                                      $this->_escape['quotes'],
+                                      $this->_escape['charset']);
+            } else {
+                $var = call_user_func($escape, $var);
+            }
         }
-
-        return call_user_func($this->__config['escape'], $var);
+        return $var;
     }
     
     
@@ -567,7 +569,17 @@ class Main
         }
         $file = $this->findTemplateFile($this->template);
         $outputcontroller = $this->output_controllers[$this->selected_controller];
-        return $outputcontroller($mixed, $file);
+        $parent = new \stdClass;
+        if (count($this->templateStack)) {
+            $parent->parent = $this->templateStack[count($this->templateStack)-1];
+        } else {
+            $parent->parent = null;
+        }
+        $parent->context = $mixed;
+        $this->templateStack[] = $parent;
+        $ret = $outputcontroller($mixed, $parent, $file);
+        array_pop($this->templateStack);
+        return $ret;
     }
     
     /**

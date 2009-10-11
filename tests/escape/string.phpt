@@ -5,6 +5,7 @@
 require dirname(__FILE__) . '/../test_framework.php.inc';
 chdir(__DIR__);
 $savant = new \pear2\Templates\Savant\Main();
+$savant->setEscape('htmlspecialchars');
 
 $string = 'test';
 $test->assertEquals($string, $savant->escape($string), 'render');
