@@ -480,14 +480,13 @@ class Main
         return $this->applyFilters($string);
     }
     
-    protected function renderArray($mixed, $template = null)
+    protected function renderArray($array, $template = null)
     {
-        $output = '';
-        foreach ($mixed as $m) {
-            $output .= $this->render($m, $template);
-        }
-        
-        return $output;
+        $savant = $this;
+        $render = function($output, $mixed) use ($savant, $template) {
+            return $output . $savant->render($mixed, $template);
+        };
+        return array_reduce($array, $render, '');
     }
     
     protected function renderObject($object, $template = null)
