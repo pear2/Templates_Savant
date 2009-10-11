@@ -39,7 +39,7 @@ class Main
     protected $__config = array(
         'compiler'      => null,
         'filters'       => array(),
-        'escape'        => 'htmlspecialchars',
+        'escape'        => null,
     );
     
     /**
@@ -518,13 +518,31 @@ class Main
         return $this->applyFilters($string);
     }
     
-    protected function renderArray($array, $template = null)
+    protected function renderArray(array $array, $template = null)
     {
         $savant = $this;
         $render = function($output, $mixed) use ($savant, $template) {
             return $output . $savant->render($mixed, $template);
         };
         return array_reduce($array, $render, '');
+    }
+
+    public function renderAssocArray(array $array, $selected = false, Closure $template)
+    {
+        $ret = '';
+        foreach ($array as $key => $element) {
+            $ret .= $template($key, $element, $selected);
+        }
+        return $ret;
+    }
+
+    public function renderElse($condition, $render, $else, $rendertemplate = null, $elsetemplate = null)
+    {
+        if ($condition) {
+            $this->render($render, $rendertemplate);
+        } else {
+            $this->render($else, $elsetemplate);
+        }
     }
     
     protected function renderObject($object, $template = null)
