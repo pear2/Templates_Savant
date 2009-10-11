@@ -319,11 +319,8 @@ class Main
     
     public function setTemplatePath($path = null)
     {
-        // clear out the prior search dirs
-        $this->template_path = array();
-        
-        // always add the fallback directories as last resort
-        $this->addTemplatePath('.');
+        // clear out the prior search dirs, add default
+        $this->template_path = array('./');
         
         // actually add the user-specified directories
         $this->addTemplatePath($path);
@@ -495,8 +492,7 @@ class Main
     
     protected function renderObject($object, $template = null)
     {
-        if (is_object($object)
-            && count($this->getEscape())) {
+        if ($this->__config['escape']) {
             $object = new ObjectProxy($object, $this);
         }
         return $this->fetch($object, $template);
@@ -514,11 +510,11 @@ class Main
             }
             $this->template = $this->getClassToTemplateMapper()->map($class);
         }
-        $outputcontroller = $this->output_controllers[$this->selected_controller];
         $file = $this->findTemplateFile($this->template);
         if (!$file) {
             throw new TemplateException('Could not find the template '.$this->template);
         }
+        $outputcontroller = $this->output_controllers[$this->selected_controller];
         return $outputcontroller($mixed, $file);
     }
     
