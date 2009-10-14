@@ -44,6 +44,7 @@ class Main
     
     /**
      * Parameters for escaping.
+     * 
      * @var array
      */
     protected $_escape = array(
@@ -53,12 +54,14 @@ class Main
     
     /**
      * The output template to render using
+     * 
      * @var string
      */
     protected $template;
 
     /**
      * stack of templates, so we can access the parent template
+     * 
      * @var array
      */
     protected $templateStack = array();
@@ -66,12 +69,14 @@ class Main
     /**
      * To avoid stats on locating templates, populate this array with
      * full path => 1 for any existing templates
+     * 
      * @var array
      */
     protected $templateMap = array();
     
     /**
      * An array of paths to look for template files in.
+     * 
      * @var array
      */
     protected $template_path = array('./');
@@ -79,11 +84,13 @@ class Main
     /**
      * A list of output controllers.  One does no filtering, another does.  This
      * makes non-filtering controllers faster.
+     * 
      * @var array
      */
     protected $output_controllers = array();
 
     /**
+     * The current controller to use
      * 
      * @var string
      */
@@ -164,6 +171,11 @@ class Main
         }
     }
     
+    /**
+     * Return the current template set (if any)
+     * 
+     * @return string
+     */
     function getTemplate()
     {
         return $this->template;
@@ -243,11 +255,26 @@ class Main
         }
     }
     
+    /**
+     * Set the class to template mapper.
+     * 
+     * @see MapperInterface
+     * 
+     * @param MapperInterface $mapper The mapper interface to use 
+     * 
+     * @return Main
+     */
     function setClassToTemplateMapper(MapperInterface $mapper)
     {
         $this->class_to_template = $mapper;
+        return $this;
     }
     
+    /**
+     * Get the class to template mapper.
+     * 
+     * @return MapperInterface
+     */
     function getClassToTemplateMapper()
     {
         if (!isset($this->class_to_template)) {
@@ -282,13 +309,14 @@ class Main
     * 
     * @access public
     *
-    * @return void
+    * @return Main
     *
     */
     
     public function setEscape()
     {
         $this->__config['escape'] = @func_get_args();
+        return $this;
     }
     
     
@@ -315,6 +343,7 @@ class Main
      * {@link $_encoding} setting.
      *
      * @param mixed $var The output to escape.
+     * 
      * @return mixed The escaped value.
      */
     public function escape($var)
@@ -340,6 +369,11 @@ class Main
     //
     // -----------------------------------------------------------------
     
+    /**
+     * Get the template path.
+     * 
+     * @return array
+     */
     function getTemplatePath()
     {
         return $this->template_path;
@@ -354,7 +388,7 @@ class Main
     * @param string|array $path The new set of search paths.  If null or
     * false, resets to the current directory only.
     *
-    * @return void
+    * @return Main
     *
     */
     
@@ -365,6 +399,7 @@ class Main
         
         // actually add the user-specified directories
         $this->addTemplatePath($path);
+        return $this;
     }
     
     
@@ -376,7 +411,7 @@ class Main
     *
     * @param string|array $path The directory or stream to search.
     *
-    * @return void
+    * @return Main
     *
     */
     
@@ -477,13 +512,45 @@ class Main
     //
     // -----------------------------------------------------------------
     
-    
+    /**
+     * Render context data through a template.
+     * 
+     * This method allows you to render data through a template. Typically one
+     * will pass the model they wish to display through an optional template.
+     * If no template is specified, the ClassToTemplateMapper::map() method
+     * will be called which should return the name of a template to render.
+     * 
+     * Arrays will be looped over and rendered through the template specified.
+     * 
+     * Strings, ints, and doubles will returned if no template parameter is 
+     * present.
+     * 
+     * Within templates, two variables will be available, $context and $savant.
+     * The $context variable will contain the data passed to the render method,
+     * the $savant object will be an instance of the Main class with which you
+     * can render nested data through partial templates.
+     * 
+     * @param mixed $mixed     Data to display through the template.
+     * @param string $template A template to display data in.
+     * 
+     * @return string The template output
+     */
     function render($mixed = null, $template = null)
     {
         $method = 'render'.gettype($mixed);
         return $this->$method($mixed, $template);
     }
     
+    /**
+     * Called when a resource is rendered
+     * 
+     * @param resource $resouce  The resources
+     * @param string   $template Template
+     * 
+     * @return void
+     * 
+     * @throws UnexpectedValueException
+     */
     protected function renderResource($resouce, $template = null)
     {
         throw new UnexpectedValueException('No way to render a resource!');
@@ -504,6 +571,14 @@ class Main
         return $this->renderString($int, $template);
     }
     
+    /**
+     * Render string of data
+     * 
+     * @param string $string   String of data
+     * @param string $template A template to display the string in
+     * 
+     * @return string
+     */
     protected function renderString($string, $template = null)
     {
         if ($this->__config['escape']) {
@@ -520,6 +595,14 @@ class Main
         return $this->applyFilters($string);
     }
     
+    /**
+     * Used to render context array
+     * 
+     * @param array  $array    Data to render
+     * @param string $template Template to render
+     * 
+     * @return string Rendered output
+     */
     protected function renderArray(array $array, $template = null)
     {
         $savant = $this;
@@ -529,6 +612,18 @@ class Main
         return array_reduce($array, $render, '');
     }
 
+    /**
+     * Render an associative array of data through a template.
+     * 
+     * Three parameters will be passed to the closure, the array key, value,
+     * and selective third parameter.
+     * 
+     * @param array   $array    Associative array of data
+     * @param mixed   $selected Optional parameter to pass
+     * @param Closure $template A closure that will be called
+     * 
+     * @return string
+     */
     public function renderAssocArray(array $array, $selected = false, Closure $template)
     {
         $ret = '';
@@ -538,6 +633,17 @@ class Main
         return $ret;
     }
 
+    /**
+     * Render an if else conditional template output.
+     * 
+     * @param mixed  $condition      The conditional to evaluate
+     * @param mixed  $render         Context data to render if condition is true
+     * @param mixed  $else           Context data to render if condition is false
+     * @param string $rendertemplate If true, render using this template
+     * @param string $elsetemplate   If false, render using this template
+     * 
+     * @return string
+     */
     public function renderElse($condition, $render, $else, $rendertemplate = null, $elsetemplate = null)
     {
         if ($condition) {
@@ -547,6 +653,14 @@ class Main
         }
     }
     
+    /**
+     * Used to render an object through a template.
+     * 
+     * @param object $object   Model containing data
+     * @param string $template Template to render data through
+     * 
+     * @return string Rendered output
+     */
     protected function renderObject($object, $template = null)
     {
         if ($this->__config['escape']) {
