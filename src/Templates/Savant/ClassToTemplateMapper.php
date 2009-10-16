@@ -1,6 +1,32 @@
 <?php
-namespace pear2\Templates\Savant;
+/**
+ * pear2\Templates\Savant\ClassToTemplateMapper
+ *
+ * PHP version 5
+ *
+ * @category  Templates
+ * @package   PEAR2_Templates_Savant
+ * @author    Brett Bieber <saltybeagle@php.net>
+ * @copyright 2009 Brett Bieber
+ * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
+ * @version   SVN: $Id$
+ * @link      http://svn.php.net/repository/pear2/PEAR2_Templates_Savant
+ */
 
+/**
+ * ClassToTemplateMapper class for PEAR2_Templates_Savant
+ * 
+ * This class allows class names to be mapped to template names though a simple
+ * scheme.
+ *
+ * @category  Templates
+ * @package   PEAR2_Templates_Savant
+ * @author    Brett Bieber <saltybeagle@php.net>
+ * @copyright 2009 Brett Bieber
+ * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
+ * @link      http://svn.php.net/repository/pear2/PEAR2_Templates_Savant
+ */
+namespace pear2\Templates\Savant;
 class ClassToTemplateMapper implements MapperInterface
 {
     /**
@@ -38,6 +64,21 @@ class ClassToTemplateMapper implements MapperInterface
      */
     static $template_extension = '.tpl.php';
     
+    /**
+     * Maps class names to template filenames.
+     * 
+     * Underscores and namespace separators in class names are replaced with 
+     * directory separators.
+     * 
+     * Examples:
+     * Class           => Class.tpl.php
+     * Other_Class     => Other/Class.tpl.php
+     * namespace\Class => namespace/Class.tpl.php
+     *
+     * @param string $class Class name to map to a template
+     * 
+     * @return string Template file name
+     */
     function map($class)
     {
         if (isset(static::$output_template[$class])) {
@@ -52,7 +93,7 @@ class ClassToTemplateMapper implements MapperInterface
                                    DIRECTORY_SEPARATOR),
                              $class);
         
-        $templatefile = $class . '.tpl.php';
+        $templatefile = $class . static::$template_extension;
         
         return $templatefile;
     }
