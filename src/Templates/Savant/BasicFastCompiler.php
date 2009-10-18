@@ -4,8 +4,20 @@ namespace pear2\Templates\Savant;
 
 class BasicFastCompiler implements FastCompilerInterface
 {
+    /**
+     * Directory where compiled templates will be stored
+     * 
+     * @var string
+     */
     protected $compiledtemplatedir;
 
+    /**
+     * Constructor for the BasicFastCompiler
+     * 
+     * @param string $compiledtemplatedir Where to store compiled templates
+     * 
+     * @throws UnexpectedValueException
+     */
     function __construct($compiledtemplatedir)
     {
         $this->compiledtemplatedir = realpath($compiledtemplatedir);
@@ -17,6 +29,14 @@ class BasicFastCompiler implements FastCompilerInterface
         $this->compiledtemplatedir .= DIRECTORY_SEPARATOR;
     }
 
+    /**
+     * Compile a template.
+     * 
+     * @param string $name   Template to compile
+     * @param Main   $savant Savant main object
+     *
+     * @return string Name of the compiled template file.
+     */
     function compile($name, $savant)
     {
         $cname = $this->compiledtemplatedir . md5($name);
