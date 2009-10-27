@@ -9,19 +9,19 @@ Unlike other template systems, Savant by default does not compile your
 templates into PHP; instead, it uses PHP itself as its template language so you
 don't need to learn a new markup system.</description>
  <lead>
-  <name>Your Name</name>
-  <user>handle</user>
-  <email>handle@php.net</email>
-  <active>yes</active>
- </lead>
- <lead>
   <name>Brett Bieber</name>
   <user>saltybeagle</user>
   <email>saltybeagle@php.net</email>
   <active>yes</active>
  </lead>
- <date>2009-08-09</date>
- <time>19:33:45</time>
+ <lead>
+  <name>Gregory Beaver</name>
+  <user>cellog</user>
+  <email>cellog@php.net</email>
+  <active>yes</active>
+ </lead>
+ <date>2009-10-27</date>
+ <time>11:23:22</time>
  <version>
   <release>0.1.0</release>
   <api>0.1.0</api>
@@ -39,15 +39,49 @@ don't need to learn a new markup system.</description>
 Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
  <contents>
   <dir name="/">
+   <dir name="examples">
+    <dir name="templates">
+     <file role="doc" name="MyTemplate.tpl.php"/>
+     <file role="doc" name="stdClass.tpl.php"/>
+     <file role="doc" name="StringView.tpl.php"/>
+    </dir>
+    <file role="doc" name="basic.php"/>
+   </dir>
    <dir name="src" baseinstalldir="pear2">
     <dir name="Templates">
      <dir name="Savant">
+      <file role="php" name="BasicFastCompiler.php"/>
+      <file role="php" name="ClassToTemplateMapper.php"/>
+      <file role="php" name="CompilerException.php"/>
+      <file role="php" name="CompilerInterface.php"/>
       <file role="php" name="Exception.php"/>
-      <file role="php" name="Filter.php"/>
+      <file role="php" name="FastCompilerInterface.php"/>
+      <file role="php" name="FilterAbstract.php"/>
       <file role="php" name="Main.php"/>
-      <file role="php" name="Plugin.php"/>
+      <file role="php" name="MapperInterface.php"/>
+      <file role="php" name="ObjectProxy.php"/>
+      <file role="php" name="TemplateException.php"/>
+      <file role="php" name="UnexpectedValueException.php"/>
      </dir>
     </dir>
+   </dir>
+   <dir name="tests" baseinstalldir="/">
+    <dir name="escape">
+     <file role="test" name="echostring.tpl.php"/>
+     <file role="test" name="Foo.tpl.php"/>
+     <file role="test" name="object.phpt"/>
+     <file role="test" name="raw.tpl.php"/>
+     <file role="test" name="string.phpt"/>
+    </dir>
+    <dir name="render">
+     <file role="test" name="array.phpt"/>
+     <file role="test" name="echostring.tpl.php"/>
+     <file role="test" name="fastcompile.phpt"/>
+     <file role="test" name="Foo.tpl.php"/>
+     <file role="test" name="object.phpt"/>
+     <file role="test" name="string.phpt"/>
+    </dir>
+    <file role="test" name="test_framework.php.inc"/>
    </dir>
   </dir>
  </contents>
