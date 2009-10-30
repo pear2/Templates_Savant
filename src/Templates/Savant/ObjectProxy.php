@@ -84,7 +84,7 @@ class ObjectProxy
     
     function __set($var, $value)
     {
-        
+        $this->object->$var = $value;
     }
     
     /**
