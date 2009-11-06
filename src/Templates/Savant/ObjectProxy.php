@@ -107,6 +107,9 @@ class ObjectProxy
      */
     function __getClass()
     {
+        if ($this->object instanceof ObjectProxy) {
+            return $this->object->__getClass();
+        }
         return get_class($this->object);
     }
 }
