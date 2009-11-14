@@ -682,17 +682,16 @@ class Main
             }
             $this->template = $this->getClassToTemplateMapper()->map($class);
         }
-        $file = $this->findTemplateFile($this->template);
+        $current          = new \stdClass;
+        $current->file    = $this->findTemplateFile($this->template);
+        $current->context = $mixed;
+        $current->parent  = null;
         $outputcontroller = $this->output_controllers[$this->selected_controller];
-        $parent = new \stdClass;
         if (count($this->templateStack)) {
-            $parent->parent = $this->templateStack[count($this->templateStack)-1];
-        } else {
-            $parent->parent = null;
+            $current->parent = $this->templateStack[count($this->templateStack)-1];
         }
-        $parent->context = $mixed;
-        $this->templateStack[] = $parent;
-        $ret = $outputcontroller($mixed, $parent, $file);
+        $this->templateStack[] = $current;
+        $ret = $outputcontroller($current->context, $current->parent, $current->file);
         array_pop($this->templateStack);
         return $ret;
     }
