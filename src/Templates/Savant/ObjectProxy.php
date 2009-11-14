@@ -66,7 +66,16 @@ class ObjectProxy
     function __get($var)
     {
         $var = $this->object->$var;
-        if (is_string($var)) {
+        switch(gettype($var)) {
+        case 'object':
+            if ($var instanceof \Iterator) {
+                return new ObjectProxy\Iterator($var, $this->savant);
+            }
+            return new self($var, $this->savant);
+        case 'string':
+        case 'int':
+        case 'bool':
+        case 'double':
             return $this->savant->escape($var);
         }
         return $var;
@@ -107,9 +116,6 @@ class ObjectProxy
      */
     function __getClass()
     {
-        if ($this->object instanceof ObjectProxy) {
-            return $this->object->__getClass();
-        }
         return get_class($this->object);
     }
 }

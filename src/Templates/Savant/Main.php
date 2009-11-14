@@ -663,7 +663,8 @@ class Main
      */
     protected function renderObject($object, $template = null)
     {
-        if ($this->__config['escape']) {
+        if ($this->__config['escape']
+            && !$object instanceof ObjectProxy) {
             $object = new ObjectProxy($object, $this);
         }
         return $this->fetch($object, $template);
