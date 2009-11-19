@@ -665,7 +665,11 @@ class Main
     {
         if ($this->__config['escape']
             && !$object instanceof ObjectProxy) {
-            $object = new ObjectProxy($object, $this);
+            if ($object instanceof \Traversable) {
+                $object = new ObjectProxy\Traversable($object, $this);
+            } else {
+                $object = new ObjectProxy($object, $this);
+            }
         }
         return $this->fetch($object, $template);
     }

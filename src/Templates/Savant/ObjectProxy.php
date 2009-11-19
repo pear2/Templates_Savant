@@ -68,8 +68,8 @@ class ObjectProxy
         $var = $this->object->$var;
         switch(gettype($var)) {
         case 'object':
-            if ($var instanceof \Iterator) {
-                return new ObjectProxy\Iterator($var, $this->savant);
+            if ($var instanceof \Traversable) {
+                return new ObjectProxy\Traversable($var, $this->savant);
             }
             return new self($var, $this->savant);
         case 'string':
