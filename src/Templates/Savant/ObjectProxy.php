@@ -65,13 +65,21 @@ class ObjectProxy
      */
     function __get($var)
     {
-        $var = $this->object->$var;
+        return $this->filterVar($this->object->$var);
+    }
+    
+    /**
+     * Returns a variable, after it has been filtered.
+     * 
+     * @param mixed $var
+     * 
+     * @return string|ObjectProxy
+     */
+    protected function filterVar($var)
+    {
         switch(gettype($var)) {
         case 'object':
-            if ($var instanceof \Traversable) {
-                return new ObjectProxy\Traversable($var, $this->savant);
-            }
-            return new self($var, $this->savant);
+            return self::factory($var, $this->savant);
         case 'string':
         case 'int':
         case 'bool':
@@ -117,5 +125,24 @@ class ObjectProxy
     function __getClass()
     {
         return get_class($this->object);
+    }
+    
+    /**
+     * Constructs an ObjectProxy for the given object.
+     * 
+     * @param mixed $object The object to proxy
+     * @param Main  $savant The main savant instance
+     * 
+     * @return ObjectProxy
+     */
+    public static function factory($object, $savant)
+    {
+        if ($object instanceof \Traversable) {
+            return new ObjectProxy\Traversable($object, $savant);
+        }
+        if ($object instanceof \ArrayAccess) {
+            return new ObjectProxy\ArrayAccess($object, $savant);
+        }
+        return new self($object, $savant);
     }
 }
