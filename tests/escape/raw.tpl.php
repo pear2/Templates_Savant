@@ -1,3 +1,3 @@
 <?php
-echo $context->__raw('var1');
+echo $context->getRaw('var1');
 ?>

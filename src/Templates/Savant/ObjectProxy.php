@@ -94,7 +94,7 @@ class ObjectProxy
      * 
      * @return mixed
      */
-    function __raw($var)
+    function getRaw($var)
     {
         return $this->object->$var;
     }
