@@ -20,8 +20,8 @@ don't need to learn a new markup system.</description>
   <email>cellog@php.net</email>
   <active>yes</active>
  </lead>
- <date>2009-10-27</date>
- <time>11:23:22</time>
+ <date>2009-12-20</date>
+ <time>00:59:58</time>
  <version>
   <release>0.1.0</release>
   <api>0.1.0</api>
@@ -53,6 +53,8 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
    <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/echostring.tpl.php"/>
    <file role="php" name="php/pear2/Templates/Savant/UnexpectedValueException.php"/>
    <file role="php" name="php/pear2/Templates/Savant/TemplateException.php"/>
+   <file role="php" name="php/pear2/Templates/Savant/ObjectProxy/Traversable.php"/>
+   <file role="php" name="php/pear2/Templates/Savant/ObjectProxy/ArrayAccess.php"/>
    <file role="php" name="php/pear2/Templates/Savant/ObjectProxy.php"/>
    <file role="php" name="php/pear2/Templates/Savant/MapperInterface.php"/>
    <file role="php" name="php/pear2/Templates/Savant/Main.php"/>
@@ -67,12 +69,17 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
    <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/templates/examples/templates/stdClass.tpl.php"/>
    <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/templates/examples/templates/MyTemplate.tpl.php"/>
    <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/examples/basic.php"/>
+   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/PartialSeason.tpl.php"/>
+   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/ListItem.tpl.php"/>
+   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/index.php"/>
+   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/BaseballTeam.tpl.php"/>
+   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/BaseballPlayer.tpl.php"/>
   </dir>
  </contents>
  <dependencies>
   <required>
    <php>
-    <min>5.2.0</min>
+    <min>5.3.0</min>
    </php>
    <pearinstaller>
     <min>1.4.8</min>
@@ -81,6 +88,11 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
  </dependencies>
  <phprelease>
   <filelist>
+   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/BaseballPlayer.tpl.php" as="pear2.php.net/examples/baseball/examples/baseball/BaseballPlayer.tpl.php"/>
+   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/BaseballTeam.tpl.php" as="pear2.php.net/examples/baseball/examples/baseball/BaseballTeam.tpl.php"/>
+   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/index.php" as="pear2.php.net/examples/baseball/examples/baseball/index.php"/>
+   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/ListItem.tpl.php" as="pear2.php.net/examples/baseball/examples/baseball/ListItem.tpl.php"/>
+   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/PartialSeason.tpl.php" as="pear2.php.net/examples/baseball/examples/baseball/PartialSeason.tpl.php"/>
    <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/examples/basic.php" as="pear2.php.net/examples/examples/basic.php"/>
    <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/templates/examples/templates/MyTemplate.tpl.php" as="pear2.php.net/examples/templates/examples/templates/MyTemplate.tpl.php"/>
    <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/templates/examples/templates/stdClass.tpl.php" as="pear2.php.net/examples/templates/examples/templates/stdClass.tpl.php"/>
@@ -95,6 +107,8 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
    <install name="php/pear2/Templates/Savant/Main.php" as="pear2/Templates/Savant/Main.php"/>
    <install name="php/pear2/Templates/Savant/MapperInterface.php" as="pear2/Templates/Savant/MapperInterface.php"/>
    <install name="php/pear2/Templates/Savant/ObjectProxy.php" as="pear2/Templates/Savant/ObjectProxy.php"/>
+   <install name="php/pear2/Templates/Savant/ObjectProxy/ArrayAccess.php" as="pear2/Templates/Savant/ObjectProxy/ArrayAccess.php"/>
+   <install name="php/pear2/Templates/Savant/ObjectProxy/Traversable.php" as="pear2/Templates/Savant/ObjectProxy/Traversable.php"/>
    <install name="php/pear2/Templates/Savant/TemplateException.php" as="pear2/Templates/Savant/TemplateException.php"/>
    <install name="php/pear2/Templates/Savant/UnexpectedValueException.php" as="pear2/Templates/Savant/UnexpectedValueException.php"/>
    <install name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/echostring.tpl.php" as="pear2.php.net/escape/escape/echostring.tpl.php"/>

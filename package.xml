@@ -20,8 +20,8 @@ don't need to learn a new markup system.</description>
   <email>cellog@php.net</email>
   <active>yes</active>
  </lead>
- <date>2009-10-27</date>
- <time>11:23:22</time>
+ <date>2009-12-20</date>
+ <time>00:59:58</time>
  <version>
   <release>0.1.0</release>
   <api>0.1.0</api>
@@ -40,6 +40,13 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
  <contents>
   <dir name="/">
    <dir name="examples">
+    <dir name="baseball">
+     <file role="doc" name="BaseballPlayer.tpl.php"/>
+     <file role="doc" name="BaseballTeam.tpl.php"/>
+     <file role="doc" name="index.php"/>
+     <file role="doc" name="ListItem.tpl.php"/>
+     <file role="doc" name="PartialSeason.tpl.php"/>
+    </dir>
     <dir name="templates">
      <file role="doc" name="MyTemplate.tpl.php"/>
      <file role="doc" name="stdClass.tpl.php"/>
@@ -50,6 +57,10 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
    <dir name="src" baseinstalldir="pear2">
     <dir name="Templates">
      <dir name="Savant">
+      <dir name="ObjectProxy">
+       <file role="php" name="ArrayAccess.php"/>
+       <file role="php" name="Traversable.php"/>
+      </dir>
       <file role="php" name="BasicFastCompiler.php"/>
       <file role="php" name="ClassToTemplateMapper.php"/>
       <file role="php" name="CompilerException.php"/>
@@ -88,7 +99,7 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
  <dependencies>
   <required>
    <php>
-    <min>5.2.0</min>
+    <min>5.3.0</min>
    </php>
    <pearinstaller>
     <min>2.0.0a1</min>
