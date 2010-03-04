@@ -5,7 +5,7 @@ class ArrayAccess extends ObjectProxy implements \ArrayAccess
 {
     function offsetExists($offset)
     {
-        return $this->object->offsetExists();
+        return $this->object->offsetExists($offset);
     }
     
     function offsetGet($offset)
