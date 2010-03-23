@@ -169,4 +169,12 @@ class ObjectProxy
         }
         return new self($object, $savant);
     }
+    
+    function __toString()
+    {
+        if (method_exists($this->object, '__toString')) {
+            return $this->savant->escape($this->object->__toString());
+        }
+        throw new BadMethodCallException('Object of class '.$this->__getClass().' could not be converted to string');
+    }
 }
