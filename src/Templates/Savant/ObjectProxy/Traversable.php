@@ -4,6 +4,11 @@ use pear2\Templates\Savant\ObjectProxy;
 class Traversable extends ObjectProxy implements \Iterator
 {
 
+    function getIterator()
+    {
+        return $this->object;
+    }
+
     function next()
     {
         $this->object->next();
