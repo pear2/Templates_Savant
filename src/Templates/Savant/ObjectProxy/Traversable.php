@@ -7,4 +7,9 @@ class Traversable extends ObjectProxy implements \IteratorAggregate
     {
         return $this->object;
     }
+
+    function current()
+    {
+        return self::filterVar(parent::current());
+    }
 }
