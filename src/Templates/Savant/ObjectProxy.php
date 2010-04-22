@@ -28,7 +28,7 @@
  * @link      http://svn.php.net/repository/pear2/PEAR2_Templates_Savant
  */
 namespace pear2\Templates\Savant;
-class ObjectProxy
+class ObjectProxy implements Countable
 {
     /**
      * The internal object
@@ -90,6 +90,17 @@ class ObjectProxy
     }
     
     /**
+     * Allows direct access to the entire object for situations where the proxy
+     * interferes.
+     * 
+     * @return mixed The raw object
+     */
+    function getRawObject()
+    {
+        return $this->object;
+    }
+    
+    /**
      * Allows access to the raw member variables of the internal object.
      * 
      * @return mixed
@@ -135,7 +146,7 @@ class ObjectProxy
      */
     function __call($name, $arguments)
     {
-        return call_user_func_array(array($this->object, $name), $arguments);
+        return $this->filterVar(call_user_func_array(array($this->object, $name), $arguments));
     }
     
     /**
@@ -176,5 +187,16 @@ class ObjectProxy
             return $this->savant->escape($this->object->__toString());
         }
         throw new BadMethodCallException('Object of class '.$this->__getClass().' could not be converted to string');
+    }
+    
+    /**
+     * Returns the number of elements if the object has implemented Countable,
+     * otherwise 1 is returned.
+     * 
+     * @return int
+     */
+    function count()
+    {
+        return count($this->object);
     }
 }
