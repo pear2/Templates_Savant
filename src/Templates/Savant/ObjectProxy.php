@@ -28,7 +28,7 @@
  * @link      http://svn.php.net/repository/pear2/PEAR2_Templates_Savant
  */
 namespace pear2\Templates\Savant;
-class ObjectProxy implements Countable
+class ObjectProxy implements \Countable
 {
     /**
      * The internal object
