@@ -670,6 +670,21 @@ class Main
         return $this->fetch($object, $template);
     }
     
+    /**
+     * Used to render null through an optional template
+     * 
+     * @param null   $null     The null var
+     * @param string $template Template to render null through
+     * 
+     * @return string Rendered output
+     */
+    protected function renderNULL($null, $template = null)
+    {
+        if ($template) {
+            return $this->fetch(null, $template);
+        }
+    }
+    
     protected function fetch($mixed, $template = null)
     {
         if ($template) {
