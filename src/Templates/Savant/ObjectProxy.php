@@ -1,6 +1,6 @@
 <?php
 /**
- * pear2\Templates\Savant\ObjectProxy
+ * PEAR2\Templates\Savant\ObjectProxy
  *
  * PHP version 5
  *
@@ -27,7 +27,7 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @link      http://svn.php.net/repository/pear2/PEAR2_Templates_Savant
  */
-namespace pear2\Templates\Savant;
+namespace PEAR2\Templates\Savant;
 class ObjectProxy implements \Countable
 {
     /**
@@ -40,7 +40,7 @@ class ObjectProxy implements \Countable
     /**
      * The savant templating system
      * 
-     * @var pear2\Templates\Savant\Main
+     * @var PEAR2\Templates\Savant\Main
      */
     protected $savant;
     

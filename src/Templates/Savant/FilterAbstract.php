@@ -26,7 +26,7 @@
 * @author Paul M. Jones <pmjones@ciaweb.net>
 * 
 */
-namespace pear2\Templates\Savant;
+namespace PEAR2\Templates\Savant;
 abstract class FilterAbstract
 {
     

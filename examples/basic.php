@@ -7,7 +7,7 @@ require_once __DIR__.'/../../autoload.php';
 $class = new stdClass();
 $class->var1 = '<p>This is var1 inside a standard class</p>';
 
-$savant = new \pear2\Templates\Savant\Main();
+$savant = new \PEAR2\Templates\Savant\Main();
 $savant->addTemplatePath(__DIR__ . '/templates');
 
 // Display a simple string

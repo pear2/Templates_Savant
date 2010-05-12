@@ -44,7 +44,7 @@ define('PEAR2_Templates_Savant_SIGTYPE', $sig['hash_type']);
 // your package-specific stuff here, for instance, here is what Pyrus does:
 
 /**
- * $frontend = new \pear2\Pyrus\ScriptFrontend\Commands;
+ * $frontend = new \PEAR2\Pyrus\ScriptFrontend\Commands;
  * @array_shift($_SERVER['argv']);
  * $frontend->run($_SERVER['argv']);
  */

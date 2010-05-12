@@ -1,10 +1,10 @@
 --TEST--
-\pear2\Templates\Savant\Main::addEscaoe() object variable escaping test
+\PEAR2\Templates\Savant\Main::addEscaoe() object variable escaping test
 --FILE--
 <?php
 require dirname(__FILE__) . '/../test_framework.php.inc';
 chdir(__DIR__);
-$savant = new \pear2\Templates\Savant\Main();
+$savant = new \PEAR2\Templates\Savant\Main();
 $savant->setEscape('htmlspecialchars');
 
 class Foo

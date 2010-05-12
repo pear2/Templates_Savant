@@ -1,6 +1,6 @@
 <?php
 
-namespace pear2\Templates\Savant;
+namespace PEAR2\Templates\Savant;
 
 class BasicFastCompiler implements FastCompilerInterface
 {

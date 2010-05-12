@@ -1,10 +1,10 @@
 --TEST--
-\pear2\Templates\Savant\Main::render() fast compiler test
+\PEAR2\Templates\Savant\Main::render() fast compiler test
 --FILE--
 <?php
 require dirname(__FILE__) . '/../test_framework.php.inc';
 chdir(__DIR__);
-$savant = new \pear2\Templates\Savant\Main();
+$savant = new \PEAR2\Templates\Savant\Main();
 
 class Foo
 {
@@ -20,7 +20,7 @@ $object->var1  = ' is my class';
 
 $savant->setEscape();
 mkdir(__DIR__ . '/compiled');
-$compiler = new pear2\Templates\Savant\BasicFastCompiler(__DIR__ . DIRECTORY_SEPARATOR . 'compiled');
+$compiler = new PEAR2\Templates\Savant\BasicFastCompiler(__DIR__ . DIRECTORY_SEPARATOR . 'compiled');
 $savant->setCompiler($compiler);
 
 $test->assertEquals(__DIR__ . DIRECTORY_SEPARATOR . 'compiled' . DIRECTORY_SEPARATOR .

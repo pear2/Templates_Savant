@@ -1,6 +1,6 @@
 <?php
-namespace pear2\Templates\Savant\ObjectProxy;
-use pear2\Templates\Savant\ObjectProxy;
+namespace PEAR2\Templates\Savant\ObjectProxy;
+use PEAR2\Templates\Savant\ObjectProxy;
 class ArrayAccess extends ObjectProxy implements \ArrayAccess
 {
     function offsetExists($offset)

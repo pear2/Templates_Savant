@@ -49,6 +49,6 @@ class PartialSeason
 $team = new BaseballTeam();
 $team->name = 'Phillies';
 
-$savant = new pear2\Templates\Savant\Main();
+$savant = new PEAR2\Templates\Savant\Main();
 $savant->setEscape('htmlspecialchars');
 echo $savant->render($team);

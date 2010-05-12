@@ -1,6 +1,6 @@
 <?php
 /**
- * pear2\Templates\Savant\Main
+ * PEAR2\Templates\Savant\Main
  *
  * PHP version 5
  *
@@ -23,7 +23,7 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @link      http://svn.php.net/repository/pear2/PEAR2_Templates_Savant
  */
-namespace pear2\Templates\Savant;
+namespace PEAR2\Templates\Savant;
 class Main
 {
     /**
@@ -119,7 +119,7 @@ class Main
     * @param array $config An associative array of configuration keys for
     * the Main object.  Any, or none, of the keys may be set.
     * 
-    * @return pear2\Templates\Savant\Main A pear2\Templates\Savant\Main instance.
+    * @return PEAR2\Templates\Savant\Main A PEAR2\Templates\Savant\Main instance.
     * 
     */
     
@@ -726,8 +726,8 @@ class Main
     * 
     * @return string The full path to the compiled template script.
     * 
-    * @throws pear2\Templates\Savant\UnexpectedValueException
-    * @throws pear2\Templates\Savant\Exception
+    * @throws PEAR2\Templates\Savant\UnexpectedValueException
+    * @throws PEAR2\Templates\Savant\Exception
     * 
     */
     

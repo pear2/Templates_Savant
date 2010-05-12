@@ -1,10 +1,10 @@
 --TEST--
-\pear2\Templates\Savant\Main::render() array test
+\PEAR2\Templates\Savant\Main::render() array test
 --FILE--
 <?php
 require dirname(__FILE__) . '/../test_framework.php.inc';
 chdir(__DIR__);
-$savant = new \pear2\Templates\Savant\Main();
+$savant = new \PEAR2\Templates\Savant\Main();
 
 $array = array(1,2,3);
 $test->assertEquals('123', $savant->render($array), 'render array');

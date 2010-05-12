@@ -54,7 +54,7 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
     </dir>
     <file role="doc" name="basic.php"/>
    </dir>
-   <dir name="src" baseinstalldir="pear2">
+   <dir name="src" baseinstalldir="PEAR2">
     <dir name="Templates">
      <dir name="Savant">
       <dir name="ObjectProxy">
