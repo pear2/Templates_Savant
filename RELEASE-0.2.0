@@ -1,0 +1,13 @@
+Changes:
+
+ - Change namespace from pear2 to PEAR2
+ - Add renderNull for rendering a template with null context
+ - Fix parent context assignment
+
+Changes for filtered context output:
+ - Implement the Countable interface for filtered context
+ - Allow accessing the raw proxied object with getRawObject()
+ - Ensure traversable/iterated context is filtered
+ - Add __toString() support for filtered context
+ - Change raw variable acccess to getRaw() to match symfony and Zend Framework View 2.0 proposed syntax
+ - Add __isset and __unset for checking context when output is filtered

@@ -20,10 +20,10 @@ don't need to learn a new markup system.</description>
   <email>cellog@php.net</email>
   <active>yes</active>
  </lead>
- <date>2009-12-20</date>
- <time>00:59:58</time>
+ <date>2010-05-23</date>
+ <time>08:01:28</time>
  <version>
-  <release>0.1.0</release>
+  <release>0.2.0</release>
   <api>0.1.0</api>
  </version>
  <stability>
@@ -31,10 +31,19 @@ don't need to learn a new markup system.</description>
   <api>alpha</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
- <notes>Port Savant3 to pear2.
+ <notes>Changes:
 
-* Always throw exceptions.
-* Never load files internally.
+ - Change namespace from pear2 to PEAR2
+ - Add renderNull for rendering a template with null context
+ - Fix parent context assignment
+
+Changes for filtered context output:
+ - Implement the Countable interface for filtered context
+ - Allow accessing the raw proxied object with getRawObject()
+ - Ensure traversable/iterated context is filtered
+ - Add __toString() support for filtered context
+ - Change raw variable acccess to getRaw() to match symfony and Zend Framework View 2.0 proposed syntax
+ - Add __isset and __unset for checking context when output is filtered
 
 Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
  <contents>
@@ -61,6 +70,7 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
        <file role="php" name="ArrayAccess.php"/>
        <file role="php" name="Traversable.php"/>
       </dir>
+      <file role="php" name="BadMethodCallException.php"/>
       <file role="php" name="BasicFastCompiler.php"/>
       <file role="php" name="ClassToTemplateMapper.php"/>
       <file role="php" name="CompilerException.php"/>
