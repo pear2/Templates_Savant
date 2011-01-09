@@ -102,7 +102,13 @@ class Main
      * @var MapperInterface
      */
     protected $class_to_template;
-    
+
+    /**
+     * Array of globals available within every template
+     * 
+     * @var array
+     */
+    protected $globals = array();
     // -----------------------------------------------------------------
     //
     // Constructor and magic methods
@@ -127,29 +133,53 @@ class Main
     {
         $savant = $this;
         $this->output_controllers['basic'] = function($context, $parent, $file) use ($savant) {
+                foreach ($savant->getGlobals() as $__name => $__value) {
+                    $$__name = $__value;
+                }
+                unset($__name, $__value);
                 ob_start();
                 include $file;
                 return ob_get_clean();
             };
         $this->output_controllers['filter'] = function($context, $parent, $file) use ($savant) {
+                foreach ($savant->getGlobals() as $__name => $__value) {
+                    $$__name = $__value;
+                }
+                unset($__name, $__value);
                 ob_start();
                 include $file;
                 return $savant->applyFilters(ob_get_clean());
             };
         $this->output_controllers['basiccompiled'] = function($context, $parent, $file) use ($savant) {
+                foreach ($savant->getGlobals() as $__name => $__value) {
+                    $$__name = $__value;
+                }
+                unset($__name, $__value);
                 ob_start();
                 include $savant->template($file);
                 return ob_get_clean();
             };
         $this->output_controllers['filtercompiled'] = function($context, $parent, $file) use ($savant) {
+                foreach ($savant->getGlobals() as $__name => $__value) {
+                    $$__name = $__value;
+                }
+                unset($__name, $__value);
                 ob_start();
                 include $savant->template($file);
                 return $savant->applyFilters(ob_get_clean());
             };
         $this->output_controllers['basicfastcompiled'] = function($context, $parent, $file) use ($savant) {
+                foreach ($savant->getGlobals() as $__name => $__value) {
+                    $$__name = $__value;
+                }
+                unset($__name, $__value);
                 return include $savant->template($file);
             };
         $this->output_controllers['filterfastcompiled'] = function($context, $parent, $file) use ($savant) {
+                foreach ($savant->getGlobals() as $__name => $__value) {
+                    $$__name = $__value;
+                }
+                unset($__name, $__value);
                 return $savant->applyFilters(include $savant->template($file));
             };
         $this->selected_controller = 'basic';
@@ -170,7 +200,60 @@ class Main
             $this->addFilters($config['filters']);
         }
     }
-    
+
+    /**
+     * Add a global variable which will be available inside every template
+     * 
+     * @param string $var   The global variable name
+     * @param mixed  $value The value
+     * 
+     * @return void
+     */
+    function addGlobal($name, $value)
+    {
+        switch ($name) {
+            case 'context':
+            case 'parent':
+            case 'template':
+            case 'file':
+            case 'savant':
+            case 'this':
+                throw new BadMethodCallException('Invalid global variable name');
+        }
+
+        if ($this->__config['escape']) {
+            switch (gettype($value)) {
+                case 'object':
+                    if (!$value instanceof ObjectProxy) {
+                        $value = ObjectProxy::factory($value, $this);
+                    }
+                    break;
+                case 'string':
+                case 'int':
+                case 'double':
+                    $value = $this->escape($value);
+                    break;
+                case 'array':
+                    foreach ($value as $key=>$sub_value) {
+                        $value[$key] = $this->escape($sub_value);
+                    }
+                    break;
+            }
+        }
+
+        $this->globals[$name] = $value;
+    }
+
+    /**
+     * Get the array of assigned globals
+     * 
+     * @return array
+     */
+    function getGlobals()
+    {
+        return $this->globals;
+    }
+
     /**
      * Return the current template set (if any)
      * 
