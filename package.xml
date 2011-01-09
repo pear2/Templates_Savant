@@ -20,10 +20,10 @@ don't need to learn a new markup system.</description>
   <email>cellog@php.net</email>
   <active>yes</active>
  </lead>
- <date>2010-05-23</date>
- <time>08:01:28</time>
+ <date>2011-01-09</date>
+ <time>06:04:12</time>
  <version>
-  <release>0.2.0</release>
+  <release>0.3.0</release>
   <api>0.1.0</api>
  </version>
  <stability>
@@ -31,19 +31,10 @@ don't need to learn a new markup system.</description>
   <api>alpha</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
- <notes>Changes:
+ <notes>Feature Release:
 
- - Change namespace from pear2 to PEAR2
- - Add renderNull for rendering a template with null context
- - Fix parent context assignment
-
-Changes for filtered context output:
- - Implement the Countable interface for filtered context
- - Allow accessing the raw proxied object with getRawObject()
- - Ensure traversable/iterated context is filtered
- - Add __toString() support for filtered context
- - Change raw variable acccess to getRaw() to match symfony and Zend Framework View 2.0 proposed syntax
- - Add __isset and __unset for checking context when output is filtered
+ - Add support for global variables, available within every template [saltybeagle]
+   Use $savant-&gt;addGlobal('var', $value);
 
 Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
  <contents>

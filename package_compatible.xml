@@ -20,10 +20,10 @@ don't need to learn a new markup system.</description>
   <email>cellog@php.net</email>
   <active>yes</active>
  </lead>
- <date>2010-05-23</date>
- <time>08:01:28</time>
+ <date>2011-01-09</date>
+ <time>06:04:12</time>
  <version>
-  <release>0.2.0</release>
+  <release>0.3.0</release>
   <api>0.1.0</api>
  </version>
  <stability>
@@ -31,35 +31,26 @@ don't need to learn a new markup system.</description>
   <api>alpha</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
- <notes>Changes:
+ <notes>Feature Release:
 
- - Change namespace from pear2 to PEAR2
- - Add renderNull for rendering a template with null context
- - Fix parent context assignment
-
-Changes for filtered context output:
- - Implement the Countable interface for filtered context
- - Allow accessing the raw proxied object with getRawObject()
- - Ensure traversable/iterated context is filtered
- - Add __toString() support for filtered context
- - Change raw variable acccess to getRaw() to match symfony and Zend Framework View 2.0 proposed syntax
- - Add __isset and __unset for checking context when output is filtered
+ - Add support for global variables, available within every template [saltybeagle]
+   Use $savant-&gt;addGlobal('var', $value);
 
 Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
  <contents>
   <dir name="/">
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/test_framework.php.inc"/>
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/string.phpt"/>
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/object.phpt"/>
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/Foo.tpl.php"/>
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/fastcompile.phpt"/>
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/echostring.tpl.php"/>
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/array.phpt"/>
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/string.phpt"/>
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/raw.tpl.php"/>
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/object.phpt"/>
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/Foo.tpl.php"/>
-   <file role="test" name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/echostring.tpl.php"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/test_framework.php.inc"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/string.phpt"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/object.phpt"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/Foo.tpl.php"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/fastcompile.phpt"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/echostring.tpl.php"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/array.phpt"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/escape/escape/string.phpt"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/escape/escape/raw.tpl.php"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/escape/escape/object.phpt"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/escape/escape/Foo.tpl.php"/>
+   <file role="test" name="test/pear2.php.net/PEAR2_Templates_Savant/escape/escape/echostring.tpl.php"/>
    <file role="php" name="php/PEAR2/Templates/Savant/UnexpectedValueException.php"/>
    <file role="php" name="php/PEAR2/Templates/Savant/TemplateException.php"/>
    <file role="php" name="php/PEAR2/Templates/Savant/ObjectProxy/Traversable.php"/>
@@ -75,15 +66,15 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
    <file role="php" name="php/PEAR2/Templates/Savant/ClassToTemplateMapper.php"/>
    <file role="php" name="php/PEAR2/Templates/Savant/BasicFastCompiler.php"/>
    <file role="php" name="php/PEAR2/Templates/Savant/BadMethodCallException.php"/>
-   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/templates/examples/templates/StringView.tpl.php"/>
-   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/templates/examples/templates/stdClass.tpl.php"/>
-   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/templates/examples/templates/MyTemplate.tpl.php"/>
-   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/examples/basic.php"/>
-   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/PartialSeason.tpl.php"/>
-   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/ListItem.tpl.php"/>
-   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/index.php"/>
-   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/BaseballTeam.tpl.php"/>
-   <file role="doc" name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/BaseballPlayer.tpl.php"/>
+   <file role="doc" name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/templates/examples/templates/StringView.tpl.php"/>
+   <file role="doc" name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/templates/examples/templates/stdClass.tpl.php"/>
+   <file role="doc" name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/templates/examples/templates/MyTemplate.tpl.php"/>
+   <file role="doc" name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/examples/basic.php"/>
+   <file role="doc" name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/baseball/examples/baseball/PartialSeason.tpl.php"/>
+   <file role="doc" name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/baseball/examples/baseball/ListItem.tpl.php"/>
+   <file role="doc" name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/baseball/examples/baseball/index.php"/>
+   <file role="doc" name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/baseball/examples/baseball/BaseballTeam.tpl.php"/>
+   <file role="doc" name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/baseball/examples/baseball/BaseballPlayer.tpl.php"/>
   </dir>
  </contents>
  <dependencies>
@@ -98,15 +89,15 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
  </dependencies>
  <phprelease>
   <filelist>
-   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/BaseballPlayer.tpl.php" as="pear2.php.net/examples/baseball/examples/baseball/BaseballPlayer.tpl.php"/>
-   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/BaseballTeam.tpl.php" as="pear2.php.net/examples/baseball/examples/baseball/BaseballTeam.tpl.php"/>
-   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/index.php" as="pear2.php.net/examples/baseball/examples/baseball/index.php"/>
-   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/ListItem.tpl.php" as="pear2.php.net/examples/baseball/examples/baseball/ListItem.tpl.php"/>
-   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/baseball/examples/baseball/PartialSeason.tpl.php" as="pear2.php.net/examples/baseball/examples/baseball/PartialSeason.tpl.php"/>
-   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/examples/basic.php" as="pear2.php.net/examples/examples/basic.php"/>
-   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/templates/examples/templates/MyTemplate.tpl.php" as="pear2.php.net/examples/templates/examples/templates/MyTemplate.tpl.php"/>
-   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/templates/examples/templates/stdClass.tpl.php" as="pear2.php.net/examples/templates/examples/templates/stdClass.tpl.php"/>
-   <install name="doc/PEAR2_Templates_Savant/pear2.php.net/examples/templates/examples/templates/StringView.tpl.php" as="pear2.php.net/examples/templates/examples/templates/StringView.tpl.php"/>
+   <install name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/baseball/examples/baseball/BaseballPlayer.tpl.php" as="PEAR2_Templates_Savant/examples/baseball/examples/baseball/BaseballPlayer.tpl.php"/>
+   <install name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/baseball/examples/baseball/BaseballTeam.tpl.php" as="PEAR2_Templates_Savant/examples/baseball/examples/baseball/BaseballTeam.tpl.php"/>
+   <install name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/baseball/examples/baseball/index.php" as="PEAR2_Templates_Savant/examples/baseball/examples/baseball/index.php"/>
+   <install name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/baseball/examples/baseball/ListItem.tpl.php" as="PEAR2_Templates_Savant/examples/baseball/examples/baseball/ListItem.tpl.php"/>
+   <install name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/baseball/examples/baseball/PartialSeason.tpl.php" as="PEAR2_Templates_Savant/examples/baseball/examples/baseball/PartialSeason.tpl.php"/>
+   <install name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/examples/basic.php" as="PEAR2_Templates_Savant/examples/examples/basic.php"/>
+   <install name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/templates/examples/templates/MyTemplate.tpl.php" as="PEAR2_Templates_Savant/examples/templates/examples/templates/MyTemplate.tpl.php"/>
+   <install name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/templates/examples/templates/stdClass.tpl.php" as="PEAR2_Templates_Savant/examples/templates/examples/templates/stdClass.tpl.php"/>
+   <install name="doc/pear2.php.net/PEAR2_Templates_Savant/examples/templates/examples/templates/StringView.tpl.php" as="PEAR2_Templates_Savant/examples/templates/examples/templates/StringView.tpl.php"/>
    <install name="php/PEAR2/Templates/Savant/BadMethodCallException.php" as="PEAR2/Templates/Savant/BadMethodCallException.php"/>
    <install name="php/PEAR2/Templates/Savant/BasicFastCompiler.php" as="PEAR2/Templates/Savant/BasicFastCompiler.php"/>
    <install name="php/PEAR2/Templates/Savant/ClassToTemplateMapper.php" as="PEAR2/Templates/Savant/ClassToTemplateMapper.php"/>
@@ -122,18 +113,18 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
    <install name="php/PEAR2/Templates/Savant/ObjectProxy/Traversable.php" as="PEAR2/Templates/Savant/ObjectProxy/Traversable.php"/>
    <install name="php/PEAR2/Templates/Savant/TemplateException.php" as="PEAR2/Templates/Savant/TemplateException.php"/>
    <install name="php/PEAR2/Templates/Savant/UnexpectedValueException.php" as="PEAR2/Templates/Savant/UnexpectedValueException.php"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/echostring.tpl.php" as="pear2.php.net/escape/escape/echostring.tpl.php"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/Foo.tpl.php" as="pear2.php.net/escape/escape/Foo.tpl.php"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/object.phpt" as="pear2.php.net/escape/escape/object.phpt"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/raw.tpl.php" as="pear2.php.net/escape/escape/raw.tpl.php"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/escape/escape/string.phpt" as="pear2.php.net/escape/escape/string.phpt"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/array.phpt" as="pear2.php.net/render/render/array.phpt"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/echostring.tpl.php" as="pear2.php.net/render/render/echostring.tpl.php"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/fastcompile.phpt" as="pear2.php.net/render/render/fastcompile.phpt"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/Foo.tpl.php" as="pear2.php.net/render/render/Foo.tpl.php"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/object.phpt" as="pear2.php.net/render/render/object.phpt"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/render/render/string.phpt" as="pear2.php.net/render/render/string.phpt"/>
-   <install name="test/PEAR2_Templates_Savant/pear2.php.net/test_framework.php.inc" as="pear2.php.net/test_framework.php.inc"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/escape/escape/echostring.tpl.php" as="PEAR2_Templates_Savant/escape/escape/echostring.tpl.php"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/escape/escape/Foo.tpl.php" as="PEAR2_Templates_Savant/escape/escape/Foo.tpl.php"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/escape/escape/object.phpt" as="PEAR2_Templates_Savant/escape/escape/object.phpt"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/escape/escape/raw.tpl.php" as="PEAR2_Templates_Savant/escape/escape/raw.tpl.php"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/escape/escape/string.phpt" as="PEAR2_Templates_Savant/escape/escape/string.phpt"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/array.phpt" as="PEAR2_Templates_Savant/render/render/array.phpt"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/echostring.tpl.php" as="PEAR2_Templates_Savant/render/render/echostring.tpl.php"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/fastcompile.phpt" as="PEAR2_Templates_Savant/render/render/fastcompile.phpt"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/Foo.tpl.php" as="PEAR2_Templates_Savant/render/render/Foo.tpl.php"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/object.phpt" as="PEAR2_Templates_Savant/render/render/object.phpt"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/render/render/string.phpt" as="PEAR2_Templates_Savant/render/render/string.phpt"/>
+   <install name="test/pear2.php.net/PEAR2_Templates_Savant/test_framework.php.inc" as="PEAR2_Templates_Savant/test_framework.php.inc"/>
   </filelist>
  </phprelease>
 </package>

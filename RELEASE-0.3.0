@@ -1,0 +1,4 @@
+Feature Release:
+
+ - Add support for global variables, available within every template [saltybeagle]
+   Use $savant->addGlobal('var', $value);
