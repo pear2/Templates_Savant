@@ -82,9 +82,10 @@ class ObjectProxy implements \Countable
             return self::factory($var, $this->savant);
         case 'string':
         case 'int':
-        case 'bool':
         case 'double':
             return $this->savant->escape($var);
+        case 'array':
+            return new ObjectProxy\ArrayAccess(new \ArrayIterator($var), $this->savant);
         }
         return $var;
     }
