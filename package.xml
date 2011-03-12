@@ -20,8 +20,8 @@ don't need to learn a new markup system.</description>
   <email>cellog@php.net</email>
   <active>yes</active>
  </lead>
- <date>2011-01-12</date>
- <time>14:41:45</time>
+ <date>2011-03-12</date>
+ <time>08:34:07</time>
  <version>
   <release>0.3.1</release>
   <api>0.1.0</api>
@@ -54,26 +54,28 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
     </dir>
     <file role="doc" name="basic.php"/>
    </dir>
-   <dir name="src" baseinstalldir="PEAR2">
-    <dir name="Templates">
-     <dir name="Savant">
-      <dir name="ObjectProxy">
-       <file role="php" name="ArrayAccess.php"/>
-       <file role="php" name="Traversable.php"/>
+   <dir name="src" baseinstalldir="/">
+    <dir name="PEAR2">
+     <dir name="Templates">
+      <dir name="Savant">
+       <dir name="ObjectProxy">
+        <file role="php" name="ArrayAccess.php"/>
+        <file role="php" name="Traversable.php"/>
+       </dir>
+       <file role="php" name="BadMethodCallException.php"/>
+       <file role="php" name="BasicFastCompiler.php"/>
+       <file role="php" name="ClassToTemplateMapper.php"/>
+       <file role="php" name="CompilerException.php"/>
+       <file role="php" name="CompilerInterface.php"/>
+       <file role="php" name="Exception.php"/>
+       <file role="php" name="FastCompilerInterface.php"/>
+       <file role="php" name="FilterAbstract.php"/>
+       <file role="php" name="Main.php"/>
+       <file role="php" name="MapperInterface.php"/>
+       <file role="php" name="ObjectProxy.php"/>
+       <file role="php" name="TemplateException.php"/>
+       <file role="php" name="UnexpectedValueException.php"/>
       </dir>
-      <file role="php" name="BadMethodCallException.php"/>
-      <file role="php" name="BasicFastCompiler.php"/>
-      <file role="php" name="ClassToTemplateMapper.php"/>
-      <file role="php" name="CompilerException.php"/>
-      <file role="php" name="CompilerInterface.php"/>
-      <file role="php" name="Exception.php"/>
-      <file role="php" name="FastCompilerInterface.php"/>
-      <file role="php" name="FilterAbstract.php"/>
-      <file role="php" name="Main.php"/>
-      <file role="php" name="MapperInterface.php"/>
-      <file role="php" name="ObjectProxy.php"/>
-      <file role="php" name="TemplateException.php"/>
-      <file role="php" name="UnexpectedValueException.php"/>
      </dir>
     </dir>
    </dir>
