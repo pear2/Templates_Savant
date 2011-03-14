@@ -20,21 +20,21 @@ don't need to learn a new markup system.</description>
   <email>cellog@php.net</email>
   <active>yes</active>
  </lead>
- <date>2011-03-12</date>
- <time>08:34:07</time>
+ <date>2011-03-13</date>
+ <time>22:27:33</time>
  <version>
-  <release>0.1.0</release>
+  <release>0.3.2</release>
   <api>0.1.0</api>
  </version>
  <stability>
-  <release>devel</release>
+  <release>alpha</release>
   <api>alpha</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>Bugfix Release:
 
- - Improve escaping of arrays
- - Add tests for globals
+ * Refactor auto-escaping for arrays to preserve standard array interaction. [saltybeagle]
+
 
 Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
  <contents>
@@ -59,7 +59,7 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
    <file role="php" name="php/PEAR2/Templates/Savant/UnexpectedValueException.php"/>
    <file role="php" name="php/PEAR2/Templates/Savant/TemplateException.php"/>
    <file role="php" name="php/PEAR2/Templates/Savant/ObjectProxy/Traversable.php"/>
-   <file role="php" name="php/PEAR2/Templates/Savant/ObjectProxy/ArrayAccess.php"/>
+   <file role="php" name="php/PEAR2/Templates/Savant/ObjectProxy/ArrayIterator.php"/>
    <file role="php" name="php/PEAR2/Templates/Savant/ObjectProxy.php"/>
    <file role="php" name="php/PEAR2/Templates/Savant/MapperInterface.php"/>
    <file role="php" name="php/PEAR2/Templates/Savant/Main.php"/>
@@ -114,7 +114,7 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
    <install name="php/PEAR2/Templates/Savant/Main.php" as="PEAR2/Templates/Savant/Main.php"/>
    <install name="php/PEAR2/Templates/Savant/MapperInterface.php" as="PEAR2/Templates/Savant/MapperInterface.php"/>
    <install name="php/PEAR2/Templates/Savant/ObjectProxy.php" as="PEAR2/Templates/Savant/ObjectProxy.php"/>
-   <install name="php/PEAR2/Templates/Savant/ObjectProxy/ArrayAccess.php" as="PEAR2/Templates/Savant/ObjectProxy/ArrayAccess.php"/>
+   <install name="php/PEAR2/Templates/Savant/ObjectProxy/ArrayIterator.php" as="PEAR2/Templates/Savant/ObjectProxy/ArrayIterator.php"/>
    <install name="php/PEAR2/Templates/Savant/ObjectProxy/Traversable.php" as="PEAR2/Templates/Savant/ObjectProxy/Traversable.php"/>
    <install name="php/PEAR2/Templates/Savant/TemplateException.php" as="PEAR2/Templates/Savant/TemplateException.php"/>
    <install name="php/PEAR2/Templates/Savant/UnexpectedValueException.php" as="PEAR2/Templates/Savant/UnexpectedValueException.php"/>
