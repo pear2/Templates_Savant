@@ -176,6 +176,11 @@ class ObjectProxy implements \Countable
         if ($object instanceof \Traversable) {
             return new ObjectProxy\Traversable($object, $savant);
         }
+
+        if ($object instanceof \ArrayAccess) {
+            return new ObjectProxy\ArrayAccess($object, $savant);
+        }
+
         if ($object instanceof \ArrayIterator) {
             return new ObjectProxy\ArrayIterator($object, $savant);
         }
