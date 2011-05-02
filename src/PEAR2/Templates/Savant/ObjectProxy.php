@@ -85,7 +85,7 @@ class ObjectProxy implements \Countable
         case 'double':
             return $this->savant->escape($var);
         case 'array':
-            return new ObjectProxy\ArrayIterator($var, $this->savant);
+            return new ObjectProxy\ArrayObject(new \ArrayObject($var), $this->savant);
         }
         return $var;
     }
@@ -173,16 +173,14 @@ class ObjectProxy implements \Countable
      */
     public static function factory($object, $savant)
     {
+        if ($object instanceof \ArrayObject) {
+            return new ObjectProxy\ArrayObject($object, $savant);
+        }
         if ($object instanceof \Traversable) {
             return new ObjectProxy\Traversable($object, $savant);
         }
-
         if ($object instanceof \ArrayAccess) {
             return new ObjectProxy\ArrayAccess($object, $savant);
-        }
-
-        if ($object instanceof \ArrayIterator) {
-            return new ObjectProxy\ArrayIterator($object, $savant);
         }
         return new self($object, $savant);
     }
