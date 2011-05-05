@@ -20,10 +20,10 @@ don't need to learn a new markup system.</description>
   <email>cellog@php.net</email>
   <active>yes</active>
  </lead>
- <date>2011-03-13</date>
- <time>22:27:33</time>
+ <date>2011-05-05</date>
+ <time>14:19:23</time>
  <version>
-  <release>0.3.2</release>
+  <release>0.3.3</release>
   <api>0.1.0</api>
  </version>
  <stability>
@@ -33,7 +33,7 @@ don't need to learn a new markup system.</description>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>Bugfix Release:
 
- * Refactor auto-escaping for arrays to preserve standard array interaction. [saltybeagle]
+ * Proxy array and ArrayObject objects through a new proxy class that supports all ArrayObject interfaces. [saltybeagle, gauthierm]
 
 
 Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
@@ -59,7 +59,9 @@ Package PEAR2_Templates_Savant API release notes for version 0.1.0.</notes>
      <dir name="Templates">
       <dir name="Savant">
        <dir name="ObjectProxy">
+        <file role="php" name="ArrayAccess.php"/>
         <file role="php" name="ArrayIterator.php"/>
+        <file role="php" name="ArrayObject.php"/>
         <file role="php" name="Traversable.php"/>
        </dir>
        <file role="php" name="BadMethodCallException.php"/>
