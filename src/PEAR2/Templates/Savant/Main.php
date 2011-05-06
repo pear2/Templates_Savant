@@ -10,7 +10,7 @@
  * @copyright 2009 Brett Bieber
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version   SVN: $Id$
- * @link      http://svn.php.net/repository/pear2/PEAR2_Templates_Savant
+ * @link      https://github.com/pear2/PEAR2_Templates_Savant
  */
 
 /**
@@ -21,7 +21,7 @@
  * @author    Brett Bieber <saltybeagle@php.net>
  * @copyright 2009 Brett Bieber
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
- * @link      http://svn.php.net/repository/pear2/PEAR2_Templates_Savant
+ * @link      https://github.com/pear2/PEAR2_Templates_Savant
  */
 namespace PEAR2\Templates\Savant;
 class Main
@@ -272,7 +272,7 @@ class Main
     
     /**
     *
-    * Returns a copy of the Savant3 configuration parameters.
+    * Returns a copy of the Savant configuration parameters.
     *
     * @access public
     * 
@@ -302,7 +302,7 @@ class Main
     * 
     * Sets a custom compiler/pre-processor callback for template sources.
     * 
-    * By default, Savant3 does not use a compiler; use this to set your
+    * By default, Savant does not use a compiler; use this to set your
     * own custom compiler (pre-processor) for template sources.
     * 
     * @access public
@@ -506,7 +506,7 @@ class Main
             $path = explode(PATH_SEPARATOR, $path);
             
             // typically in path strings, the first one is expected
-            // to be searched first. however, Savant3 uses a stack,
+            // to be searched first. however, Savant uses a stack,
             // so the first would be last.  reverse the path string
             // so that it behaves as expected with path strings.
             $path = array_reverse($path);
@@ -762,7 +762,6 @@ class Main
             if ($object instanceof ObjectProxy\ArrayIterator) {
                 return $this->renderArrayAccess($object);
             }
-
         }
         return $this->fetch($object, $template);
     }
@@ -927,7 +926,6 @@ class Main
         foreach ($this->__config['filters'] as $callback) {
             $buffer = call_user_func($callback, $buffer);
         }
-        
         return $buffer;
     }
     
